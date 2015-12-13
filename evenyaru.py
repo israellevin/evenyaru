@@ -7,6 +7,7 @@ import json
 import flask
 import redis
 import logging
+import logentries
 import threading
 import flask.ext.socketio as io
 
@@ -16,6 +17,10 @@ app.config['SECRET_KEY'] = 'Should be set in env'
 if 'DEBUG' in os.environ:
     app.debug = True
     app.logger.setLevel(logging.DEBUG)
+else:
+    app.logger.setLevel(logging.INFO)
+    app.logger.addHandler(logentries.LogentriesHandler(os.environ['LOGENTRIES_TOKEN']))
+
 app.logger.info('Flask started')
 
 db = redis.from_url(os.environ['REDISCLOUD_URL'])

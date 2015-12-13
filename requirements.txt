@@ -1,3 +1,4 @@
+argparse==1.2.1
 certifi==2015.4.28
 Flask==0.10.1
 Flask-SocketIO==0.6.0
@@ -8,6 +9,8 @@ greenlet==0.4.7
 gunicorn==18.0
 itsdangerous==0.24
 Jinja2==2.7.3
+Logentries==0.15
 MarkupSafe==0.23
 redis==2.10.3
 Werkzeug==0.10.4
+wsgiref==0.1.2
