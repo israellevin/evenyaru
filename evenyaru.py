@@ -76,6 +76,7 @@ def index():
 @socketio.on('connect')
 def connect(_):
     'Report back with token.'
+    app.logger.debug("{} connected".format(flask.session.get('token', 'notoken')))
     io.emit('connected', {'token': flask.session.get('token')})
 
 
@@ -96,15 +97,16 @@ def join(message):
 @socketio.on('disconnect')
 def disconnect():
     'Cleanup.'
-    room = flask.session['room']
-    del flask.session['room']
-    try:
-        rooms[room]['count'] -= 1
-        if rooms[room]['count'] > 1:
-            del rooms[room]
-            pubsub.unsubscribe(room)
-    except KeyError:
-        pass
+    if 'room' in flask.session.keys():
+        room = flask.session['room']
+        del flask.session['room']
+        try:
+            rooms[room]['count'] -= 1
+            if rooms[room]['count'] > 1:
+                del rooms[room]
+                pubsub.unsubscribe(room)
+        except KeyError:
+            pass
 
 
 @socketio.on('play')
