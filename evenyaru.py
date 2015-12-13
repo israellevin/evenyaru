@@ -18,8 +18,14 @@ if 'DEBUG' in os.environ:
     app.debug = True
     app.logger.setLevel(logging.DEBUG)
 else:
+    log_format = ("%(utcnow)s\tl=%(levelname)s\tu=%(user_id)s\tip=%(ip)s"
+                          "\tm=%(method)s\turl=%(url)s\tmsg=%(message)s")
+    formatter = logging.Formatter(log_format)
+    leHandler = logentries.LogentriesHandler(os.environ.['LOGENTRIES_TOKEN'])
+    leHandler.setLevel(logging.INFO)
+    leHandler.setFormatter(formatter)
     app.logger.setLevel(logging.INFO)
-    app.logger.addHandler(logentries.LogentriesHandler(os.environ['LOGENTRIES_TOKEN']))
+    app.logger.addHandler(leHandler)
 
 app.logger.info('Flask started')
 
