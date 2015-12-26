@@ -7,22 +7,36 @@
         <link href=lib/ionic/css/ionic.css rel=stylesheet>
         <link href=css/bootstrap.css rel=stylesheet>
         <link href=css/style.css rel=stylesheet>
+	<link href="css/spiner.css" rel="stylesheet"  type="text/css">
         <script src=lib/ionic/js/ionic.bundle.js></script>
         <script src=cordova.js></script>
         <script src=js/app.js></script>
         <script src=js/jquery-2.0.3.min.js></script>
         <script src=js/socket.io.min.js></script>
     </head>
-    <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak>
-        <div ng-switch on=ready>
+    <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak class=team-{{token}}>
+        <div ng-switch on=ready class='main'>
             <div ng-switch-default>
                 <input ng-model=form.room ng-keypress="roomchange($event)">
             </div>
             <div ng-switch-when=true>
-                <ul>
-                <li>game in {{room}} is on.</li>
-                <li>You: {{score[0]}} Him: {{score[1]}}</li>
-                {{message}}
+		
+		<div id=room>{{room}}</div>
+
+	
+		
+		<div class=header ng-if="token == '5a3b5823-9889-46c5-8f85-589b29446b98'">
+			<div class=us>ירוק:  {{score[0]}} נקודות</div>
+			<div class=them>סגולה: {{score[1]}} נקודות</div>
+		</div>
+		<div class=header ng-if="token == 'bfa355ca-29b7-4c44-9467-e459e9230a5e'">
+			<div class=us>סגולה:  {{score[0]}} נקודות</div>
+			<div class=them>ירוקה: {{score[1]}} נקודות</div>
+		</div>
+
+                
+
+{{state}}
                 <div ng-switch on=state>
                     <div ng-switch-when=1>
                         waiting for the other side...
@@ -31,11 +45,22 @@
                         waiting for you...
                     </div>
                 </div>
-                <select ng-if="state < 1" ng-model=form.choise ng-change="play()">
+		<div id=selector ng-if="state < 1">
+			<div id=rock class=game-selections ng-click="gplay('rock')"></div>
+			<div id=paper class=game-selections ng-click="gplay('paper')"></div>
+			<div id=scissors class=game-selections ng-click="gplay('scissors')"></div>
+		</div>
+
+		<div id=fight ng-if="state == 1" >
+			<div id=us class={{yourlastchois}}></div>
+			<div id=them> <div class=atebits-loader></div> </div>
+		</div>
+					
+                <!--select ng-if="state < 1" ng-model=form.choise ng-change="play()">
                     <option value=rock>rock</option>
                     <option value=paper>paper</option>
                     <option value=scissors>scissors</option>
-                </select>
+                </select-->
             </div>
         </div>
     </body>
