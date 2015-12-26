@@ -168,7 +168,11 @@ def play(message):
         db.publish(room, json.dumps({'move': team}))
     else:
         winner = resolve(json.loads(existingchoise), (team, choise))
-        db.incr("score-{}-{}".format(room, winner))
+        if winner:
+            db.incr("score-{}-{}".format(room, winner))
+        else:
+            for winner in [0, 1]:
+                db.incrby("score-{}-{}".format(room, winner), 2)
         db.publish(room, json.dumps({'winner': winner}))
         emitscore(room)
 
