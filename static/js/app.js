@@ -23,7 +23,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('ready', function(msg){
-        $scope.message = 'Chose a move:';
+        $scope.message = 'בחר:';
         $scope.score = [0, 0];
         $scope.ready = true;
         $scope.state = 0;
@@ -66,6 +66,12 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
     $scope.play = function(){
         socket.emit('play', {choise: $scope.form.choise});
+    }
+
+
+    $scope.gplay = function (val) {
+	socket.emit('play', {choise: val});
+	$scope.yourlastchois =val;
     }
 
     $scope.form = {};
