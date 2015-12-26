@@ -14,7 +14,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 })
 
-.controller('mainCtrl', function($scope, $location, $ionicPopup){
+.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('connect', {});
 
@@ -69,16 +69,23 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(msg){
-        if(!msg.winner){
-            $scope.message = "It's a tie.";
+        if(null === msg.winner){
+            $scope.message = "תיקו! פנקו את עצמכם בשתי נקודות.";
         }else{
             if(msg.winner === $scope.team){
-                $scope.message = 'You won.';
+                $scope.message = 'ניצחת';
             }else{
-                $scope.message = 'You lost.';
+                $scope.message = 'הפסדת';
             }
         }
-        $scope.message += ' Play again:'
+
+        var alert = $ionicPopup.alert({
+            title: 'GAME OVER',
+            template: $scope.message
+        });
+        $timeout(function(){alert.close();}, 1000);
+
+        $scope.message += ' שחק שוב:'
         $scope.state = 0;
         $scope.$apply();
     });
@@ -89,7 +96,6 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
     $scope.play = function(choice){
         socket.emit('play', {choice: choice});
-        $scope.state = 1;
         $scope.choice = choice;
     }
 });

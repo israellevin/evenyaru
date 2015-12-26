@@ -38,15 +38,15 @@ def resolve(a, b):
     if a[1] == b[1]:
         return None
     if (a[1], b[1]) in [('rock', 'scissors'), ('scissors', 'paper'), ('paper', 'rock')]:
-        return a[0]
-    return b[0]
+        return int(a[0])
+    return int(b[0])
 
 
-def emitscore(room):
+def publishscore(room):
     'Tell connected clients the score.'
     db.publish(room, json.dumps({'score': {
         idx: db.get("score-{}-{}".format(room, idx))
-        for idx in [0, 1]}}))
+        for idx in db.lrange("teams-{}".format(room), 0, -1)}}))
 
 
 def checkredis():
@@ -133,8 +133,7 @@ def join(message):
         rooms[room] += 1
     except KeyError:
         rooms[room] = 1
-    if 2 == rooms[room]:
-        emitscore(room)
+    publishscore(room)
 
 
 @socketio.on('disconnect')
@@ -168,13 +167,13 @@ def play(message):
         db.publish(room, json.dumps({'move': team}))
     else:
         winner = resolve(json.loads(existingchoice), (team, choice))
-        if winner:
-            db.incr("score-{}-{}".format(room, winner))
-        else:
-            for winner in [0, 1]:
-                db.incrby("score-{}-{}".format(room, winner), 2)
         db.publish(room, json.dumps({'winner': winner}))
-        emitscore(room)
+        if winner is None:
+            for player in [0, 1]:
+                db.incrby("score-{}-{}".format(room, player), 2)
+        else:
+            db.incr("score-{}-{}".format(room, winner))
+        publishscore(room)
 
 
 if __name__ == '__main__':
