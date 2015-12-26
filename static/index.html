@@ -25,8 +25,8 @@
                     <div class=them>סגולה: {{score[1]}} נקודות</div>
                 </div>
                 <div class=header ng-if="team === 1">
-                    <div class=us>סגולה:  {{score[0]}} נקודות</div>
-                    <div class=them>ירוקה: {{score[1]}} נקודות</div>
+                    <div class=us>סגולה:  {{score[1]}} נקודות</div>
+                    <div class=them>ירוקה: {{score[0]}} נקודות</div>
                 </div>
                 <div ng-switch on=state>
                     <div ng-switch-when=1>
@@ -42,7 +42,7 @@
                     <div id=scissors class=game-selections ng-click="play('scissors')"></div>
                 </div>
                 <div id=fight ng-if="state == 1">
-                    <div id=us class={{yourlastchois}}></div>
+                    <div id=us class={{choice}}></div>
                     <div id=them> <div class=atebits-loader></div> </div>
                 </div>
             </div>

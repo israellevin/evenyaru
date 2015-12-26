@@ -161,13 +161,13 @@ def play(message):
     'Choose a move.'
     room = flask.session.get('room')
     team = flask.session.get('team')
-    choise = message['choise']
-    existingchoise = db.rpop(room)
-    if existingchoise is None:
-        db.lpush(room, json.dumps((team, message['choise'])))
+    choice = message['choice']
+    existingchoice = db.rpop(room)
+    if existingchoice is None:
+        db.lpush(room, json.dumps((team, message['choice'])))
         db.publish(room, json.dumps({'move': team}))
     else:
-        winner = resolve(json.loads(existingchoise), (team, choise))
+        winner = resolve(json.loads(existingchoice), (team, choice))
         if winner:
             db.incr("score-{}-{}".format(room, winner))
         else:

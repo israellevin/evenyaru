@@ -87,8 +87,9 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         socket.emit('join', {room: room, override: override});
     };
 
-    $scope.play = function(val){
-        socket.emit('play', {choise: val});
-        $scope.yourlastchois = val;
+    $scope.play = function(choice){
+        socket.emit('play', {choice: choice});
+        $scope.state = 1;
+        $scope.choice = choice;
     }
 });
