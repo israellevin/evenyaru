@@ -1,33 +1,30 @@
+.team-0 {background:#d5a6bd;}
+.team-1 {background:#6aa84f;}
 
+.main {width:90% ; margin:5%; font-family:Arial;direction:rtl;font-size:30px;}
 
+#room {font-size:12px; position:absolute; top:0.3em; left:0.3em}
 
-	.team-bfa355ca-29b7-4c44-9467-e459e9230a5e {background:#d5a6bd;}
-	.team-5a3b5823-9889-46c5-8f85-589b29446b98 {background:#6aa84f;}
+.header div{font-weight:bold; font-size:45px; width:50%;}
+.us{float:right;display:inline-block;}
+.them{float:left;display:inline-block;}
 
-	.main {width:90% ; margin:5%; font-family:Arial;direction:rtl;font-size:30px;}
+#msg{font-size:40px;margin:0.5em;}
 
-	#room {font-size:12px; position:absolute; top:0.3em; left:0.3em}
+#selector {height:15em; width:100%; margin-top:1em;}
 
-	.header div{font-weight:bold; font-size:45px; width:50%;}
-	.us{float:right;display:inline-block;}
-	.them{float:left;display:inline-block;}
+.game-selections {height:15em;width:32%;display:inline-block;background-size:100% 10em !important}
+#scissors {background:url('../img/scissors.png') no-repeat top left transparent;}
+#paper {background:url('../img/paper.png') no-repeat top left transparent;}
+#rock {background:url('../img/rock.png') no-repeat top left transparent;}
 
-	#msg{font-size:40px;margin:0.5em;}
+.game-selections::after {height:3em;display:block;margin-top:9em;float: right;margin-right:2.5em;font-size: 40px;font-weight: bold;}
+#scissors::after {content:"מספריים";margin-right:2.5em}
+#paper::after {content:"נייר";margin-right:4em}
+#rock::after {content:"אבן";margin-right:4em}
 
-	#selector {height:15em; width:100%; margin-top:1em;}
-
-	.game-selections {height:15em;width:32%;display:inline-block;background-size:100% 10em !important}
-	#scissors {background:url('../img/scissors.png') no-repeat top left transparent;}
-	#paper {background:url('../img/paper.png') no-repeat top left transparent;}
-	#rock {background:url('../img/rock.png') no-repeat top left transparent;}
-
-	.game-selections::after {height:3em;display:block;margin-top:9em;float: right;margin-right:2.5em;font-size: 40px;font-weight: bold;}
-	#scissors::after {content:"מספריים";margin-right:2.5em}
-	#paper::after {content:"נייר";margin-right:4em}
-	#rock::after {content:"אבן";margin-right:4em}
-
-	#fight>div {background-size:auto 90% !important;height:15em;margin-top:1em;display:inline-block;width:50%;float:left}
-	#fight .scissors{background:url('../img/scissors.png') no-repeat center center transparent;}
-	#fight .paper{background:url('../img/paper.png') no-repeat center center transparent;background-size: 90% auto !important;}
-	#fight .rock{background:url('../img/rock.png') no-repeat center center transparent;}
-	.waiting {top:6.5em; left:23%;}
+#fight>div {background-size:auto 90% !important;height:15em;margin-top:1em;display:inline-block;width:50%;float:left}
+#fight .scissors{background:url('../img/scissors.png') no-repeat center center transparent;}
+#fight .paper{background:url('../img/paper.png') no-repeat center center transparent;background-size: 90% auto !important;}
+#fight .rock{background:url('../img/rock.png') no-repeat center center transparent;}
+.waiting {top:6.5em; left:23%;}

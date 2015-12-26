@@ -19,12 +19,9 @@ if 'DEBUG' in os.environ:
     app.logger.setLevel(logging.DEBUG)
 else:
     leHandler = logentries.LogentriesHandler(os.environ['LOGENTRIES_TOKEN'])
-    leHandler.setLevel(logging.INFO)
     app.logger.addHandler(leHandler)
     streamHandler = logging.StreamHandler()
-    streamHandler.setLevel(logging.INFO)
     app.logger.addHandler(streamHandler)
-    app.logger.setLevel(logging.INFO)
 
 app.logger.info('Flask started')
 
@@ -45,6 +42,13 @@ def resolve(a, b):
     return b[0]
 
 
+def emitscore(room):
+    'Tell connected clients the score.'
+    db.publish(room, json.dumps({'score': {
+        idx: db.get("score-{}-{}".format(room, idx))
+        for idx in [0, 1]}}))
+
+
 def checkredis():
     'Check redis for events.'
     while True:
@@ -56,16 +60,19 @@ def checkredis():
                 break
             if message is None:
                 break
-            if not isinstance(message['data'], long):
-                data = json.loads(message['data'])
-                if 'move' in data.keys():
-                    socketio.emit('move', {
-                        'player': data['move']}, room=message['channel'])
-                elif 'victory' in data.keys():
-                    socketio.emit('victory', {
-                        'player': data['victory']}, room=message['channel'])
-                else:
-                    app.logger.debug("unknown message: %s", message)
+            if isinstance(message['data'], long):
+                break
+
+            room = message['channel']
+            data = json.loads(message['data'])
+            if 'score' in data.keys():
+                socketio.emit('score', {'score': data['score']}, room=room)
+            elif 'move' in data.keys():
+                socketio.emit('move', {'move': data['move']}, room=room)
+            elif 'winner' in data.keys():
+                socketio.emit('winner', {'winner': data['winner']}, room=room)
+            else:
+                app.logger.warning("unknown message: %s", message)
 
 threading.Thread(target=checkredis).start()
 
@@ -86,22 +93,48 @@ def index():
 @socketio.on('connect')
 def connect(_):
     'Report back with token.'
-    app.logger.debug("{} connected".format(flask.session.get('token', 'notoken')))
-    io.emit('connected', {'token': flask.session.get('token')})
+    token = flask.session.get('token', 'notoken')
+    app.logger.info("Client {} connected".format(token))
+    io.emit('connected', {'token': token})
 
 
 @socketio.on('join')
 def join(message):
-    'Joins redis channel and socketio room.'
+    'Joins redis channel, socketio room and game team.'
     room = message['room']
+    numplayerskey = "players-{}".format(room)
+    numplayers = db.incr(numplayerskey)
+    if numplayers > 2:
+        db.decr(numplayerskey)
+        io.emit('fail', {'room': room, 'type': 'room is full'})
+        return
+
+    tokenteamkey = "team-{}".format(flask.session.get('token'))
+    roomteamskey = "teams-{}".format(room)
+    if numplayers > 1:
+        team = 1 - int(db.lrange(roomteamskey, 0, 1)[0])
+        if team != int(db.get(tokenteamkey) or team) and not message.get('override'):
+            db.decr(numplayerskey)
+            io.emit('fail', {'room': room, 'type': 'wrong team'})
+            return
+    else:
+        team = (db.get(tokenteamkey) or 0)
+    db.lpush(roomteamskey, team)
+
+    db.set(tokenteamkey, team)
     flask.session['room'] = room
-    try:
-        rooms[room]['count'] += 1
-    except KeyError:
-        rooms[room] = {'count': 1}
+    flask.session['team'] = team
+
     pubsub.subscribe(room)
     io.join_room(room)
-    io.emit('ready', room)
+    io.emit('ready', {'room': room, 'team': team})
+
+    try:
+        rooms[room] += 1
+    except KeyError:
+        rooms[room] = 1
+    if 2 == rooms[room]:
+        emitscore(room)
 
 
 @socketio.on('disconnect')
@@ -109,12 +142,16 @@ def disconnect():
     'Cleanup.'
     if 'room' in flask.session.keys():
         room = flask.session['room']
+        team = flask.session['team']
+        db.decr("players-{}".format(room))
+        db.lrem("teams-{}".format(room), team, 0)
         del flask.session['room']
+
         try:
-            rooms[room]['count'] -= 1
-            if rooms[room]['count'] > 1:
-                del rooms[room]
+            rooms[room] -= 1
+            if rooms[room] < 1:
                 pubsub.unsubscribe(room)
+                del rooms[room]
         except KeyError:
             pass
 
@@ -123,15 +160,17 @@ def disconnect():
 def play(message):
     'Choose a move.'
     room = flask.session.get('room')
-    token = flask.session.get('token')
+    team = flask.session.get('team')
     choise = message['choise']
     existingchoise = db.rpop(room)
     if existingchoise is None:
-        db.lpush(room, json.dumps((token, message['choise'])))
-        db.publish(room, json.dumps({'move': token}))
+        db.lpush(room, json.dumps((team, message['choise'])))
+        db.publish(room, json.dumps({'move': team}))
     else:
-        db.publish(room, json.dumps({'victory': resolve(
-            json.loads(existingchoise), (token, choise))}))
+        winner = resolve(json.loads(existingchoise), (team, choise))
+        db.incr("score-{}-{}".format(room, winner))
+        db.publish(room, json.dumps({'winner': winner}))
+        emitscore(room)
 
 
 if __name__ == '__main__':
