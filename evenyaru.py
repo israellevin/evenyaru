@@ -142,6 +142,8 @@ def join(message):
 @socketio.on('disconnect')
 def disconnect():
     'Cleanup.'
+    if 'token' in flask.session.keys():
+        app.logger.info("Client {} disconnected".format(token))
     if 'room' in flask.session.keys():
         room = flask.session['room']
         team = flask.session['team']
