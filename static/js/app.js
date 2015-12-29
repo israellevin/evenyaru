@@ -20,7 +20,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
     socket.on('connected', function(msg){
         $scope.token = msg.token;
-        $scope.room = 'stam';
+        $scope.room = $location.search().room || 'stam';
         $scope.join($scope.room);
         $scope.$apply();
     });
