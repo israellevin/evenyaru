@@ -72,6 +72,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         if(null === msg.winner){
             $scope.message = "תיקו! פנקו את עצמכם בשתי נקודות.";
         }else{
+            console.log(msg.winner, $scope.team, msg.winner === $scope.team);
             if(msg.winner === $scope.team){
                 $scope.message = 'ניצחת';
             }else{

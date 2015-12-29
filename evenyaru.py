@@ -176,7 +176,7 @@ def play(message):
             db.incr("score-{}-{}".format(room, winner))
         publishscore(room)
         app.logger.info("Team {} played {} against {} in {}, the winner is {}".format(
-            team, choice, existingchoice, room, winner))
+            team, choice, existingchoice[1], room, winner))
 
 
 if __name__ == '__main__':
