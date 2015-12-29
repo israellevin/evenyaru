@@ -7,7 +7,6 @@ import json
 import flask
 import redis
 import logging
-import logentries
 import threading
 import flask.ext.socketio as io
 
@@ -18,11 +17,7 @@ if 'DEBUG' in os.environ:
     app.debug = True
     app.logger.setLevel(logging.DEBUG)
 else:
-    leHandler = logentries.LogentriesHandler(os.environ['LOGENTRIES_TOKEN'])
-    leHandler.setLevel(logging.INFO)
-    app.logger.addHandler(leHandler)
     streamHandler = logging.StreamHandler()
-    streamHandler.setLevel(logging.INFO)
     app.logger.addHandler(streamHandler)
     app.logger.setLevel(logging.INFO)
 

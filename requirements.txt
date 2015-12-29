@@ -9,7 +9,6 @@ greenlet==0.4.7
 gunicorn==18.0
 itsdangerous==0.24
 Jinja2==2.7.3
-Logentries==0.15
 MarkupSafe==0.23
 redis==2.10.3
 Werkzeug==0.10.4
