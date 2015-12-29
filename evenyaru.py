@@ -111,8 +111,8 @@ def join(message):
         db.decr(numplayerskey)
         io.emit('fail', {'room': room, 'type': 'room is full'})
         return
-
-    tokenteamkey = "team-{}".format(flask.session.get('token'))
+    token = flask.session.get('token')
+    tokenteamkey = "team-{}".format(token)
     roomteamskey = "teams-{}".format(room)
     if numplayers > 1:
         team = 1 - int(db.lrange(roomteamskey, 0, 1)[0])
@@ -131,6 +131,7 @@ def join(message):
     pubsub.subscribe(room)
     io.join_room(room)
     io.emit('ready', {'room': room, 'team': team})
+    app.logger.info("Client {} joined {} as {}".format(token, room, team))
 
     try:
         rooms[room] += 1
@@ -142,8 +143,7 @@ def join(message):
 @socketio.on('disconnect')
 def disconnect():
     'Cleanup.'
-    if 'token' in flask.session.keys():
-        app.logger.info("Client {} disconnected".format(token))
+    app.logger.info("Client {} disconnected".format(flask.session.get('token')))
     if 'room' in flask.session.keys():
         room = flask.session['room']
         team = flask.session['team']
@@ -170,6 +170,7 @@ def play(message):
     if existingchoice is None:
         db.lpush(room, json.dumps((team, message['choice'])))
         db.publish(room, json.dumps({'move': team}))
+        app.logger.info("Team {} played {} in {}".format(team, choice, room))
     else:
         winner = resolve(json.loads(existingchoice), (team, choice))
         db.publish(room, json.dumps({'winner': winner}))
@@ -179,6 +180,8 @@ def play(message):
         else:
             db.incr("score-{}-{}".format(room, winner))
         publishscore(room)
+        app.logger.info("Team {} played {} against {} in {}, the winner is {}".format(
+            team, choice, existingchoice, room, winner))
 
 
 if __name__ == '__main__':
