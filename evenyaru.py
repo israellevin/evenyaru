@@ -8,6 +8,7 @@ import flask
 import redis
 import logging
 import threading
+import email.utils
 import flask.ext.socketio as io
 
 app = flask.Flask(__name__, static_url_path='')
@@ -177,6 +178,20 @@ def play(message):
         publishscore(room)
         app.logger.info("Team {} played {} against {} in {}, the winner is {}".format(
             team, choice, json.loads(existingchoice)[1], room, winner))
+
+
+@socketio.on('log_email')
+def log_email(address):
+    'Send a message to log.'
+    app.logger.info('stam')
+    app.logger.debug(email.utils.parseaddr(address)[1])
+    if '@' in email.utils.parseaddr(address)[1]:
+        app.logger.info(
+            "Client %s in team %s in room %s gave address '%s'",
+            flask.session.get('token'),
+            flask.session.get('team'),
+            flask.session.get('room'),
+            address)
 
 
 if __name__ == '__main__':

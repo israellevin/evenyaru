@@ -15,6 +15,10 @@
         <script src=js/socket.io.min.js></script>
     </head>
     <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak class=team-{{team}}>
+        <form ng-submit="log_email(email); email='';">
+            <input ng-model=email>
+            <input type=submit value="תן לנו את האימייל שלך">
+        </form>
         <div ng-switch on=ready class='main'>
             <div ng-switch-default>
                 <div id=room>waiting to join {{room}}...</div>
