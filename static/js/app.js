@@ -102,7 +102,6 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     };
 
     $scope.log_email = function(address){
-        console.log('log_email', address);
         socket.emit('log_email', address);
     };
 });

@@ -183,8 +183,6 @@ def play(message):
 @socketio.on('log_email')
 def log_email(address):
     'Send a message to log.'
-    app.logger.info('stam')
-    app.logger.debug(email.utils.parseaddr(address)[1])
     if '@' in email.utils.parseaddr(address)[1]:
         app.logger.info(
             "Client %s in team %s in room %s gave address '%s'",
