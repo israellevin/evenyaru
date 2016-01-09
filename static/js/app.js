@@ -15,6 +15,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 })
 
 .controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
+    var moves = ['rock', 'paper', 'scissors']
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('connect', {});
 
@@ -63,7 +64,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
     socket.on('move', function(message){
         if(message.move === $scope.team){
-            $scope.state = 1;
+            $scope.state = 2;
         }else{
             $scope.state = -1;
         }
@@ -71,24 +72,26 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(message){
+        var modifier = 0;
         if(null === message.winner){
             $scope.message = "תיקו! פנקו את עצמכם בשתי נקודות.";
         }else{
             if(message.winner === $scope.team){
+                modifier = -1;
                 $scope.message = 'ניצחת';
             }else{
+                modifier = 1;
                 $scope.message = 'הפסדת';
             }
         }
+        $scope.response = moves[(moves.indexOf($scope.choice) + modifier) % 3];
 
-        var alert = $ionicPopup.alert({
-            title: 'GAME OVER',
-            template: $scope.message
-        });
-        $timeout(function(){alert.close();}, 2000);
+        // TODO Here comes the animation.
+        $timeout(function(){
+            $scope.state = 0;
+        }, 5000);
 
         $scope.message += ' שחק שוב:'
-        $scope.state = 0;
         $scope.$apply();
     });
 
@@ -97,8 +100,11 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     };
 
     $scope.play = function(choice){
+        $scope.state = 1;
         socket.emit('play', {choice: choice});
         $scope.choice = choice;
+        $scope.response = false;
+        $scope.$apply();
     };
 
     $scope.log_email = function(address){

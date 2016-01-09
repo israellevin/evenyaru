@@ -15,7 +15,8 @@
         <script src=js/socket.io.min.js></script>
     </head>
     <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak class=team-{{team}}>
-        <form ng-submit="log_email(email); email='';">
+    <ion-content scroll=false>
+        <form ng-submit="log_email(email); email='';" class=heidden>
             <input ng-model=email>
             <input type=submit value="תן לנו את האימייל שלך">
         </form>
@@ -32,24 +33,20 @@
                     <div class=us>סגולה:  {{score[1]}} נקודות</div>
                     <div class=them>ירוקה: {{score[0]}} נקודות</div>
                 </div>
-                <div ng-switch on=state>
-                    <div ng-switch-when=1>
-                        waiting for the other side...
-                    </div>
-                    <div ng-switch-when=-1>
-                        waiting for you...
-                    </div>
-                </div>
                 <div id=selector ng-if="state < 1">
                     <div id=rock class=game-selections ng-click="play('rock')"></div>
                     <div id=paper class=game-selections ng-click="play('paper')"></div>
                     <div id=scissors class=game-selections ng-click="play('scissors')"></div>
                 </div>
-                <div id=fight ng-if="state == 1">
+                <div id=fight ng-if="state > 0">
                     <div id=us class={{choice}}></div>
-                    <div id=them> <div class=atebits-loader></div> </div>
+                    <div ng-if="!response" id=them>
+                        <div class=atebits-loader></div>
+                    </div>
+                    <div ng-if="response" id=them class={{response}}></div>
                 </div>
             </div>
         </div>
+    </ion-content>
     </body>
 </html>

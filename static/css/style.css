@@ -1,30 +1,32 @@
-.team-0 {background:#d5a6bd;}
-.team-1 {background:#6aa84f;}
+.team-0 {background:url('../img/test/optica_pattern_02_640.png')} /*purple #d5a6bd;*/
+.team-1 {background:#6aa84f;} /*green*/
 
-.main {width:90% ; margin:5%; font-family:Arial;direction:rtl;font-size:30px;}
+.main {width:90% ; margin:5%; font-family:Arial;direction:rtl;font-size:17px;}
 
 #room {font-size:12px; position:absolute; top:0.3em; left:0.3em}
+.heidden {display:none}
 
-.header div{font-weight:bold; font-size:45px; width:50%;}
+.header{overflow: hidden;}
+.header div{font-weight:bold; font-size:25px; width:50%;}
 .us{float:right;display:inline-block;}
 .them{float:left;display:inline-block;}
 
 #msg{font-size:40px;margin:0.5em;}
 
-#selector {height:15em; width:100%; margin-top:1em;}
+#selector {height:15em; width:100%; margin-top:2em;}
 
 .game-selections {height:15em;width:32%;display:inline-block;background-size:100% 10em !important}
 #scissors {background:url('../img/scissors.png') no-repeat top left transparent;}
-#paper {background:url('../img/paper.png') no-repeat top left transparent;}
-#rock {background:url('../img/rock.png') no-repeat top left transparent;}
+#paper {background:url('../img/paper2.png') no-repeat top left transparent;}
+#rock {background:url('../img/rock2.png') no-repeat top left transparent;}
 
-.game-selections::after {height:3em;display:block;margin-top:9em;float: right;margin-right:2.5em;font-size: 40px;font-weight: bold;}
+.game-selections::after {height:3em;display:block;margin-top:4.5em;float: right;margin-right:2.5em;font-size: 40px;font-weight: bold;}
 #scissors::after {content:"מספריים";margin-right:2.5em}
 #paper::after {content:"נייר";margin-right:4em}
 #rock::after {content:"אבן";margin-right:4em}
 
-#fight>div {background-size:auto 90% !important;height:15em;margin-top:1em;display:inline-block;width:50%;float:left}
+#fight>div {background-size:auto 70% !important;height:15em;margin-top:1em;display:inline-block;width:50%;float:left}
 #fight .scissors{background:url('../img/scissors.png') no-repeat center center transparent;}
-#fight .paper{background:url('../img/paper.png') no-repeat center center transparent;background-size: 90% auto !important;}
-#fight .rock{background:url('../img/rock.png') no-repeat center center transparent;}
+#fight .paper{background:url('../img/paper2.png') no-repeat center center transparent;background-size:auto 65% !important;}
+#fight .rock{background:url('../img/rock2.png') no-repeat center center transparent;}
 .waiting {top:6.5em; left:23%;}
