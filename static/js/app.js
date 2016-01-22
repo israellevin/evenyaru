@@ -72,20 +72,26 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(message){
-        var modifier = 0;
+        var modifier = 0; 
+	var you = ''; var them='';
         if(null === message.winner){
             $scope.message = "תיקו! פנקו את עצמכם בשתי נקודות.";
+	    you='cool';  them='cool';	
         }else{
             if(message.winner === $scope.team){
                 modifier = -1;
-                $scope.message = 'ניצחת';
+                $scope.message = 'נצחת';
+		you='win';  them='lose';	
             }else{
                 modifier = 1;
                 $scope.message = 'הפסדת';
+		you='lose';  them='win';	
             }
         }
         $scope.response = moves[(moves.indexOf($scope.choice) + modifier) % 3];
-
+	$scope.choice += ' ' + you;
+	$scope.response += ' ' + them;
+	
         // TODO Here comes the animation.
         $timeout(function(){
             $scope.state = 0;

@@ -26,24 +26,39 @@
             </div>
             <div ng-switch-when=true>
                 <div class=header ng-if="team === 0">
-                    <div class=us>ירוקה:  {{score[0]}} נקודות</div>
-                    <div class=them>סגולה: {{score[1]}} נקודות</div>
+                    <div class='us green'>ירוקה:  {{score[0]}} נקודות</div>
+		    <div class=uncleSam>עזור לירוקים לנצח!</div>
+                    <div class='them purple'>סגולה: {{score[1]}} נקודות</div>
                 </div>
                 <div class=header ng-if="team === 1">
-                    <div class=us>סגולה:  {{score[1]}} נקודות</div>
-                    <div class=them>ירוקה: {{score[0]}} נקודות</div>
+                    <div class='us purple'>סגולה:  {{score[1]}} נקודות</div>
+		    <div class=uncleSam>עזור לסגולים לנצח!</div>
+                    <div class='them green'>ירוקה: {{score[0]}} נקודות</div>
                 </div>
+		
                 <div id=selector ng-if="state < 1">
                     <div id=rock class=game-selections ng-click="play('rock')"></div>
                     <div id=paper class=game-selections ng-click="play('paper')"></div>
                     <div id=scissors class=game-selections ng-click="play('scissors')"></div>
                 </div>
-                <div id=fight ng-if="state > 0">
-                    <div id=us class={{choice}}></div>
+		
+		<div id=fight ng-if="state > 0">
+		    <div id=ourchoice class='{{choice}}'>
+			<div id=eye1 class=eye></div>
+			<div id=eye2 class=eye></div>
+		    </div>
+                    <div ng-if="!response" id=response></div>
+		    
+		    
+                </div>
+		
+                <div id=fightOLD ng-if="state > 0">
+                    <div id=us class='{{choice}}'><div class=makeface></div></div>
                     <div ng-if="!response" id=them>
                         <div class=atebits-loader></div>
                     </div>
-                    <div ng-if="response" id=them class={{response}}></div>
+                    <div ng-if="response" id=them class='them {{response}}'><div class=makeface></div></div>
+		    <div class=msg>{{message}}</div>
                 </div>
             </div>
         </div>
