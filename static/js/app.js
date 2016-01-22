@@ -1,3 +1,4 @@
+var MOVES = ['rock', 'paper', 'scissors'];
 var QUIPS = {
     'win': {
         'rock': [
@@ -60,7 +61,6 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 })
 
 .controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
-    var moves = ['rock', 'paper', 'scissors']
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('connect', {});
 
@@ -117,26 +117,31 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(message){
-        var rightquips, modifier;
+        var rightquips, modifier, you, them;
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
             modifier = 0;
+            you = them = 'cool';
         }else if(message.winner === $scope.team){
             rightquips = QUIPS.win[$scope.choice];
             modifier = -1;
+            you = 'win'; them = 'lose';
         }else{
             rightquips = QUIPS.lose[$scope.choice];
             modifier = 1;
+            you = 'lose'; them = 'win';
         }
         $scope.message = rightquips[Math.floor(Math.random() * rightquips.length)];
-        $scope.response = moves[(moves.indexOf($scope.choice) + modifier) % 3];
+        $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
+        $scope.choice += ' ' + you;
+        $scope.response += ' ' + them;
 
         // TODO Here comes the animation.
         $timeout(function(){
             $scope.state = 0;
         }, 5000);
 
-        $scope.message += ' שחק שוב:'
+        $scope.message += ' שחק שוב:';
         $scope.$apply();
     });
 
