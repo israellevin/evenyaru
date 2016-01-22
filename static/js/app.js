@@ -1,3 +1,48 @@
+var QUIPS = {
+    'win': {
+        'rock': [
+            'win rock 1',
+            'win rock 2'
+        ],
+        'paper': [
+            'win paper 1',
+            'win paper 2'
+        ],
+        'scissors': [
+            'win scissors 1',
+            'win scissors 2'
+        ]
+    },
+    'draw': {
+        'rock': [
+            'draw rock 1',
+            'draw rock 2'
+        ],
+        'paper': [
+            'draw paper 1',
+            'draw paper 2'
+        ],
+        'scissors': [
+            'draw scissors 1',
+            'draw scissors 2'
+        ]
+    },
+    'lose': {
+        'rock': [
+            'lose rock 1',
+            'lose rock 2'
+        ],
+        'paper': [
+            'lose paper 1',
+            'lose paper 2'
+        ],
+        'scissors': [
+            'lose scissors 1',
+            'lose scissors 2'
+        ]
+    }
+};
+
 angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     $ionicConfigProvider.views.maxCache(0);
 })
@@ -72,18 +117,18 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(message){
-        var modifier = 0;
+        var rightquips, modifier;
         if(null === message.winner){
-            $scope.message = "תיקו! פנקו את עצמכם בשתי נקודות.";
+            rightquips = QUIPS.draw[$scope.choice];
+            modifier = 0;
+        }else if(message.winner === $scope.team){
+            rightquips = QUIPS.win[$scope.choice];
+            modifier = -1;
         }else{
-            if(message.winner === $scope.team){
-                modifier = -1;
-                $scope.message = 'ניצחת';
-            }else{
-                modifier = 1;
-                $scope.message = 'הפסדת';
-            }
+            rightquips = QUIPS.lose[$scope.choice];
+            modifier = 1;
         }
+        $scope.message = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = moves[(moves.indexOf($scope.choice) + modifier) % 3];
 
         // TODO Here comes the animation.

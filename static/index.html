@@ -16,6 +16,7 @@
     </head>
     <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak class=team-{{team}}>
     <ion-content scroll=false>
+        {{message}}
         <form ng-submit="log_email(email); email='';" class=heidden>
             <input ng-model=email>
             <input type=submit value="תן לנו את האימייל שלך">
