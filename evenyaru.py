@@ -69,6 +69,7 @@ def checkredis():
             elif 'move' in data.keys():
                 socketio.emit('move', {'move': data['move']}, room=room)
             elif 'winner' in data.keys():
+                app.logger.info("win message: %s", message)
                 socketio.emit('winner', {'winner': data['winner']}, room=room)
             else:
                 app.logger.warning("unknown message: %s", message)

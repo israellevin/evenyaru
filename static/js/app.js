@@ -2,44 +2,44 @@ var MOVES = ['rock', 'paper', 'scissors'];
 var QUIPS = {
     'win': {
         'rock': [
-            'win rock 1',
-            'win rock 2'
+            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ],
         'paper': [
-            'win paper 1',
-            'win paper 2'
+            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ],
         'scissors': [
-            'win scissors 1',
-            'win scissors 2'
+            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ]
     },
     'draw': {
         'rock': [
-            'draw rock 1',
-            'draw rock 2'
+            '"אין בנמצא הנאה כמו להיפגש עם חבר ישן, אולי מלבד להתיידד עם חבר חדש." ~ רודיארד קיפלינג',
+            '"טוב שכן קרוב מאח רחוק." (משלי כז י)'
         ],
         'paper': [
-            'draw paper 1',
-            'draw paper 2'
+            '"אין בנמצא הנאה כמו להיפגש עם חבר ישן, אולי מלבד להתיידד עם חבר חדש." ~ רודיארד קיפלינג',
+            '"טוב שכן קרוב מאח רחוק." (משלי כז י)'
         ],
         'scissors': [
-            'draw scissors 1',
-            'draw scissors 2'
+            '"אין בנמצא הנאה כמו להיפגש עם חבר ישן, אולי מלבד להתיידד עם חבר חדש." ~ רודיארד קיפלינג',
+            '"טוב שכן קרוב מאח רחוק." (משלי כז י)'
         ]
     },
     'lose': {
         'rock': [
-            'lose rock 1',
-            'lose rock 2'
+            '"אם מצאתי אלף דרכים שלא עובדות, לא נכשלתי. כל ניסיון שכשל הוא עוד צעד קדימה" ~ תומאס אלווה אדיסון',
+            '"הכישלון איננו מבטל את כנותו של הניסיון." ~ פול אוסטר'
         ],
         'paper': [
-            'lose paper 1',
-            'lose paper 2'
+            '"אם מצאתי אלף דרכים שלא עובדות, לא נכשלתי. כל ניסיון שכשל הוא עוד צעד קדימה" ~ תומאס אלווה אדיסון',
+            '"הכישלון איננו מבטל את כנותו של הניסיון." ~ פול אוסטר'
         ],
         'scissors': [
-            'lose scissors 1',
-            'lose scissors 2'
+            '"אם מצאתי אלף דרכים שלא עובדות, לא נכשלתי. כל ניסיון שכשל הוא עוד צעד קדימה" ~ תומאס אלווה אדיסון',
+            '"הכישלון איננו מבטל את כנותו של הניסיון." ~ פול אוסטר'
         ]
     }
 };
@@ -117,32 +117,38 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('winner', function(message){
-        var rightquips, modifier, you, them;
+        var rightquips, modifier, you, them='';
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
-            modifier = 0;
+            modifier = 3;
             you = them = 'cool';
         }else if(message.winner === $scope.team){
             rightquips = QUIPS.win[$scope.choice];
-            modifier = -1;
+            modifier = 2;
             you = 'win'; them = 'lose';
         }else{
             rightquips = QUIPS.lose[$scope.choice];
-            modifier = 1;
+            modifier = 4;
             you = 'lose'; them = 'win';
         }
-        $scope.message = rightquips[Math.floor(Math.random() * rightquips.length)];
+        $scope.quip = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
-        $scope.choice += ' ' + you;
-        $scope.response += ' ' + them;
-
+        console.log($scope.response);
+        $scope.choicesuccess =  you;
+        $scope.them = them;
+        $scope.message += ' שחק שוב:';
+	$scope.autoplay = '';
+	
         // TODO Here comes the animation.
         $timeout(function(){
-            $scope.state = 0;
-        }, 5000);
-
-        $scope.message += ' שחק שוב:';
-        $scope.$apply();
+	       $scope.autoplay = 'autoplay';       
+	       $timeout(function(){
+		    $scope.state = 3;
+		    $timeout(function(){
+			$scope.state = 0;
+			},  6000);	
+		},  3000);	
+        },  6000);
     });
 
     $scope.join = function(room, override){
@@ -154,6 +160,8 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         socket.emit('play', {choice: choice});
         $scope.choice = choice;
         $scope.response = false;
+	$scope.choicesuccess='';
+	$scope.them ='';
         $scope.$apply();
     };
 
