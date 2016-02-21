@@ -141,14 +141,11 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 	
         // TODO Here comes the animation.
         $timeout(function(){
-	       $scope.autoplay = 'autoplay';       
-	       $timeout(function(){
-		    $scope.state = 3;
-		    $timeout(function(){
-			$scope.state = 0;
-			},  6000);	
-		},  3000);	
-        },  6000);
+	    $scope.state = 3;
+	    $timeout(function(){
+		$scope.state = 0;
+		},  10000);	
+        },  9000);
     });
 
     $scope.join = function(room, override){

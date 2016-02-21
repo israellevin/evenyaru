@@ -28,19 +28,21 @@
 
 #fight {position:relative;}
 
-#ourchoice {height:15em;margin:1em auto 0 auto;display:block;}
+#ourchoice {height:15em;margin:1em auto 0 auto;display:inline-block;margin-left:2em;float:left;}
 #oc_sci {-webkit-animation: wait_scissors 3s steps(1) infinite;animation: wait_scissors 3s steps(1) infinite;background:url('../img/scissors_s2.png') no-repeat center center transparent;width:122px; height:200px;margin-left:2em;float:left;}
 #oc_paper {-webkit-animation: wait_paper 3s steps(1) infinite;animation: wait_paper 3s steps(1) infinite;background:url('../img/paper_s2.png') no-repeat center center transparent;width:216px; height:200px;margin-left:2em;float:left;}
 #oc_rock  {-webkit-animation: wait_rock 3s steps(1) infinite;animation: wait_rock 3s steps(1) infinite;background:url('../img/rock_s2.png') no-repeat center center transparent;width:176px; height:200px;margin-left:2em;float:left;}
 
-.win #oc_sci, .lose #oc_sci {-webkit-animation: us_scissors 3s steps(1) 2;animation: us_scissors 3s steps(1) 2;background:url('../img/scissors_s2.png') no-repeat center center transparent;width:122px; height:200px;margin-left:2em;float:left;}
-.win #oc_paper, .lose #oc_paper {-webkit-animation: us_paper 3s steps(1) 2;animation: us_paper 3s steps(1) 2;background:url('../img/paper_s2.png') no-repeat center center transparent;width:216px; height:200px;margin-left:2em;float:left;}
-.win #oc_rock, .lose #oc_rock  {-webkit-animation: us_rock 3s steps(1) 2;animation: us_rock 3s steps(1) 2;background:url('../img/rock_s2.png') no-repeat center center transparent;width:176px; height:200px;margin-left:2em;float:left;}
+.win #oc_sci, .lose #oc_sci {-webkit-animation: us_scissors 3s steps(1) 1;animation: us_scissors 3s steps(1) 1;background:url('../img/scissors_s2.png') no-repeat center center transparent;width:122px; height:200px;}
+.win #oc_paper, .lose #oc_paper {-webkit-animation: us_paper 3s steps(1) 1;animation: us_paper 3s steps(1) 1;background:url('../img/paper_s2.png') no-repeat center center transparent;width:216px; height:200px;}
+.win #oc_rock, .lose #oc_rock  {-webkit-animation: us_rock 3s steps(1) 1;animation: us_rock 3s steps(1) 1;background:url('../img/rock_s2.png') no-repeat center center transparent;width:176px; height:200px;}
 
-#response, #response div.them{position:absolute; right:2em; height:200px;top:0px;width:216px}
-#response div.scissors {-webkit-animation: them_scissors 3s steps(1) 2;animation: them_scissors 3s steps(1) 2;background:url('../img/scissors_s3.png') no-repeat top left transparent;width:122px;}
-#response div.paper {-webkit-animation: them_paper 3s steps(1) 2;animation: them_paper 3s steps(1) 2;background:url('../img/paper_s3.png') no-repeat top left transparent;width:216px;}
-#response div.rock {-webkit-animation: them_rock 3s steps(1) 2;animation: them_rock 3s steps(1) 2;background:url('../img/rock_s3.png') no-repeat top left transparent;width:176px;}
+#response, #response div.them{position:absolute; right:1em; height:200px;top:0px;width:216px;display:inline-block}
+#response div.scissors {-webkit-animation: them_scissors 3s steps(1) 1;animation: them_scissors 3s steps(1) 1;background:url('../img/scissors_s3.png') no-repeat top left transparent;width:122px;}
+#response div.paper {-webkit-animation: them_paper 3s steps(1) 1;animation: them_paper 3s steps(1) 1;background:url('../img/paper_s3.png') no-repeat top left transparent;width:216px;}
+#response div.rock {-webkit-animation: them_rock 3s steps(1) 1;animation: them_rock 3s steps(1) 1;background:url('../img/rock_s3.png') no-repeat top left transparent;width:176px;}
+
+.ourresulttext {font-family: 'BN Zika';inline-block; width: 80px;float: left;color:darkred;}
 
 /*.win {-webkit-animation: win_fade 6s ease-in 3s 1;animation: win_fade 6s ease-in 3s 1;}*/
 .lose {-webkit-animation: lose_fade 6s ease-in 3s 1;animation: lose_fade 6s ease-in 3s 1;}
@@ -48,8 +50,8 @@
 /*======== EMAIL + POST FIGHT ============*/
 
 #quip {font-family:BN zika;margin:1em 0;text-align:center;font-size: 18px;}
-form {    text-align: center;margin-top: 1em;}
-#call4arms {margin-top: 1em;text-align:center;}
+form {text-align: center;margin-top: 1em;}
+#call4arms {margin-top: 1em;text-align:center;font-weight:bold;}
 
 /*================FONTS====================*/
 
