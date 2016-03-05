@@ -161,15 +161,18 @@ def disconnect():
 def play(message):
     'Choose a move.'
     room = flask.session.get('room')
-    team = flask.session.get('team')
+    team = int(flask.session.get('team'))
     choice = message['choice']
     existingchoice = db.rpop(room)
-    if existingchoice is None:
+    if existingchoice is not None:
+        existingchoice = json.loads(existingchoice)
+    if existingchoice is None or team==existingchoice[0]:
+        # when client disco/reco-nects, don't play against self :)
         db.lpush(room, json.dumps((team, message['choice'])))
         db.publish(room, json.dumps({'move': team}))
         app.logger.info("Team {} played {} in {}".format(team, choice, room))
     else:
-        winner = resolve(json.loads(existingchoice), (team, choice))
+        winner = resolve(existingchoice, (team, choice))
         db.publish(room, json.dumps({'winner': winner}))
         if winner is None:
             for player in [0, 1]:
@@ -178,7 +181,7 @@ def play(message):
             db.incr("score-{}-{}".format(room, winner))
         publishscore(room)
         app.logger.info("Team {} played {} against {} in {}, the winner is {}".format(
-            team, choice, json.loads(existingchoice)[1], room, winner))
+            team, choice, existingchoice[1], room, winner))
 
 
 @socketio.on('log_email')
