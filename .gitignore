@@ -1,3 +1,9 @@
 run.sh
+activate
+android.log
+service/.evenyaru.sqlite3
 env/
+.buildozer/
+bin/
+attic/
 *.pyc

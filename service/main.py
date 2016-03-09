@@ -24,7 +24,7 @@ else:
 
 app.logger.info('Flask started')
 
-db = redis.from_url(os.environ['REDISCLOUD_URL'])
+db = redis.from_url(os.environ.get('REDISCLOUD_URL','this is probably a kivy service'))
 pubsub = db.pubsub()
 
 socketio = io.SocketIO(app)
