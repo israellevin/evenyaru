@@ -62,6 +62,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
 .controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
     var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var timeoutObj;
     socket.emit('connect', {});
 
     socket.on('connected', function(message){
@@ -103,12 +104,13 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('score', function(message){
+        console.log('score:', message);
         $scope.score = message.score;
         $scope.$apply();
     });
 
     socket.on('move', function(message){
-        if(message.move === $scope.team){
+        if(message.move == $scope.team){
             $scope.state = 2;
         }else{
             $scope.state = -1;
@@ -137,16 +139,18 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         $scope.choicesuccess =  you;
         $scope.them = them;
         $scope.message += ' שחק שוב:';
-	$scope.autoplay = '';
-	
+    $scope.autoplay = '';
+    
         // TODO Here comes the animation.
         $timeout(function(){
-	    $scope.state = 3;
-	    $timeout(function(){
+        $scope.state = 3;
+        timeoutObj = $timeout(function(){
 		$scope.state = 0;
-		},  10000);	
+		},  10000); 
         },  9000);
     });
+    
+    
 
     $scope.join = function(room, override){
         socket.emit('join', {room: room, override: override});
@@ -165,4 +169,19 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     $scope.log_email = function(address){
         socket.emit('log_email', address);
     };
+    
+    $scope.gotomail = function(){
+	$scope.state = 3;
+	timeoutObj = $timeout(function(){
+		$scope.state = 0;
+	},  10000);
+    };
+    
+    $scope.cancelTimeout = function(){
+        $timeout.cancel(timeoutObj);
+    timeoutObj = $timeout(function(){
+        $scope.state = 0;
+    },  10000);
+    };
+    
 });

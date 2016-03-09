@@ -17,65 +17,61 @@
     </head>
     <body ng-app=evenyaru ng-controller=mainCtrl ng-cloak class=team-{{team}}>
         <ion-content scroll=false>
-           
-            <div ng-switch on=ready class='main'>
-                <div ng-switch-default>
-                    <div id=room>waiting to join {{room}}...</div>
+            <div class='main'>
+                <div class=header ng-if="team == 0">
+                    <div class='us green'>ירוקה:  {{score[0]}} נקודות</div>
+                    <div class=uncleSam>עזור לירוקים לנצח!</div>
+                    <div class='them purple'>סגולה: {{score[1]}} נקודות</div>
                 </div>
-                <div ng-switch-when=true>
-                    <div class=header ng-if="team === 0">
-                        <div class='us green'>ירוקה:  {{score[0]}} נקודות</div>
-                        <div class=uncleSam>עזור לירוקים לנצח!</div>
-                        <div class='them purple'>סגולה: {{score[1]}} נקודות</div>
-                    </div>
-                    <div class=header ng-if="team === 1">
-                        <div class='us purple'>סגולה:  {{score[1]}} נקודות</div>
-                        <div class=uncleSam>עזור לסגולים לנצח!</div>
-                        <div class='them green'>ירוקה: {{score[0]}} נקודות</div>
-                    </div>
+                <div class=header ng-if="team == 1">
+                    <div class='us purple'>סגולה:  {{score[1]}} נקודות</div>
+                    <div class=uncleSam>עזור לסגולים לנצח!</div>
+                    <div class='them green'>ירוקה: {{score[0]}} נקודות</div>
+                </div>
 
-                    <div id=selector ng-if="state < 1">
-                        <div id=rock class=game-selections ng-click="play('rock')"></div>
-                        <div id=paper class=game-selections ng-click="play('paper')"></div>
-                        <div id=scissors class=game-selections ng-click="play('scissors')"></div>
-                    </div>
+                <div id=selector ng-if="state < 1">
+                    <div id=rock class=game-selections ng-click="play('rock')"></div>
+                    <div id=paper class=game-selections ng-click="play('paper')"></div>
+                    <div id=scissors class=game-selections ng-click="play('scissors')"></div>
+                    <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
+                </div>
 
-                    <div id=fight ng-if="state > 0 && state < 3">
-			<div id=ourchoice class='{{choice}}'>
-				<div id=selected class={{choicesuccess}}>
-					<div ng-if="choice==='scissors'" id=oc_sci ></div>
-					<div ng-if="choice==='rock'" id=oc_rock></div>
-					<div ng-if="choice==='paper'" id=oc_paper></div>
-				</div>
-			</div>
-			<div ng-if="choicesuccess==='win'" class=ourresulttext>ניצחת!</div>
-			<div ng-if="choicesuccess==='lose'" class=ourresulttext>הפסדת...</div>
-			<div ng-if="choicesuccess==='cool'" class=ourresulttext>תיקו (:</div>
-			<div ng-if="response" id=response class={{them}}>
-				<div  class='them {{response}}' ></div>
-				<audio autoplay preload='auto'>
-					<source ng-if="them==='win'" src="audio/noo.wav" type="audio/wav">
-					<source ng-if="them==='lose'" src="audio/win.mp3" type="audio/ogg">
-					<source ng-if="them==='cool'" src="audio/kiss.ogg" type="audio/ogg">
-				</audio>
-			</div>
+                <div id=fight ng-if="state > 0 && state < 3">
+                    <div id=ourchoice class='{{choice}}'>
+                        <div id=selected class={{choicesuccess}}>
+                            <div ng-if="choice==='scissors'" id=oc_sci ></div>
+                            <div ng-if="choice==='rock'" id=oc_rock></div>
+                            <div ng-if="choice==='paper'" id=oc_paper></div>
+                        </div>
                     </div>
-		    
-		    <div id=postfight ng-if="state === 3">
-			<div id=quip>{{quip}}</div>
-			<div id=call4arms>נכון שבא לך להשתתף במחקר המגניב שלנו, נכון? נכון?
-			</br>
-			...תן לנו את האימייל שלך ונשלח לך את כל הפרטים
-			</br>
-			לא נעביר אותו לאף אחד. נשבעים!
-			</div>
-			<form ng-submit="log_email(email); email='';">
-				 דואל: <input id=imail ng-model=email>
-				<input id=isend type=submit value="שלח">
-			</form>
+                    <div ng-if="choicesuccess==='win'" class=ourresulttext>ניצחת!</div>
+                    <div ng-if="choicesuccess==='lose'" class=ourresulttext>הפסדת...</div>
+                    <div ng-if="choicesuccess==='cool'" class=ourresulttext>תיקו (:</div>
+                    <div ng-if="response" id=response class={{them}}>
+                        <div  class='them {{response}}' ></div>
+                        <audio autoplay preload='auto'>
+                            <source ng-if="them==='win'" src="audio/noo.wav" type="audio/wav">
+                            <source ng-if="them==='lose'" src="audio/win.mp3" type="audio/ogg">
+                            <source ng-if="them==='cool'" src="audio/kiss.ogg" type="audio/ogg">
+                        </audio>
+                    </div>
+                    <div class="mail-fight"></div>
+		    <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
+                </div>
+                <div id=postfight ng-if="state === 3">
+                    <div id=quip>{{quip}}</div>
+                    <div id=call4arms>נכון שבא לך להשתתף במחקר המגניב שלנו, נכון? נכון?
+                        </br>
+                        ...תן לנו את האימייל שלך ונשלח לך את כל הפרטים
+                        </br>
+                        לא נעביר אותו לאף אחד. נשבעים!
+                    </div>
+                    <form ng-submit="log_email(email); email='';">
+                        דואל: <input id=imail ng-model=email ng-keypress="cancelTimeout()">
+                        <input id=isend type=submit value="שלח">
+                    </form>
                 </div>
             </div>
         </ion-content>
     </body>
 </html>
-
