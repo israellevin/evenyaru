@@ -43,9 +43,11 @@ def resolve(a, b):
 
 def publishscore(room):
     'Tell connected clients the score.'
-    db.publish(room, json.dumps({'score': {
+    score = {0: '0', 1: '0'}
+    score.update({
         idx: db.get("score-{}-{}".format(room, idx))
-        for idx in db.lrange("teams-{}".format(room), 0, -1)}}))
+        for idx in db.lrange("teams-{}".format(room), 0, -1)})
+    db.publish(room, json.dumps({'score': score}))
 
 
 def checkredis():
@@ -62,6 +64,7 @@ def checkredis():
             if isinstance(message['data'], long):
                 break
 
+            app.logger.debug("got msg: %s", message)
             room = message['channel']
             data = json.loads(message['data'])
             if 'score' in data.keys():
