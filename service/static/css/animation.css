@@ -132,18 +132,16 @@
 /*========Our scissors fighting========*/
 
 @keyframes us_scissors {
-	0%{background-image: url('../img/scissors_s2.png');}
-   25% {background-image: url('../img/scissors_s_close.png');}
-   50%{background-image: url('../img/scissors_s2.png');}
-   75% {background-image: url('../img/scissors_s_close.png'); }
-   100%  {background-image: url('../img/scissors_s2.png');}
+   0%{background-image: url('../img/scissors_s2.png');}
+   33% {background-image: url('../img/scissors_s_close.png');}
+   66%{background-image: url('../img/scissors_s2.png');}
+   100%  {background-image: url('../img/scissors_s_close.png');}
 }
 @-webkit-keyframes us_scissors {
    0%{background-image: url('../img/scissors_s2.png');}
-   25% {background-image: url('../img/scissors_s_close.png');}
-   50%{background-image: url('../img/scissors_s2.png');}
-   75% {background-image: url('../img/scissors_s_close.png');}
-   100%  {background-image: url('../img/scissors_s2.png'); }
+   33% {background-image: url('../img/scissors_s_close.png');}
+   66%{background-image: url('../img/scissors_s2.png');}
+   100%  {background-image: url('../img/scissors_s_close.png');}
 }
 
 /*========Our rock fighting  ========*/

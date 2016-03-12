@@ -1,15 +1,16 @@
 'Evenyaru server'
-# pylint: disable=import-error, invalid-name
+# pylint: disable=wrong-import-position,import-error,invalid-name
 import os
 import time
 import uuid
 import json
-import flask
-import redis
 import logging
 import threading
 import email.utils
-import flask.ext.socketio as io
+
+import redis
+import flask
+import flask_socketio as io
 
 app = flask.Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'Should be set in env'
@@ -27,7 +28,40 @@ app.logger.info('Flask started')
 db = redis.from_url(os.environ.get('REDISCLOUD_URL','this is probably a kivy service'))
 pubsub = db.pubsub()
 
+# SocketIO init.
+# Set this variable to "threading", "eventlet" or "gevent" to test the
+# different async modes, or leave it set to None for the application to choose
+# the best option based on available packages.
+async_mode = 'threading'
+
+if async_mode is None:
+    try:
+        import eventlet
+        async_mode = 'eventlet'
+    except ImportError:
+        pass
+
+    if async_mode is None:
+        try:
+            from gevent import monkey
+            async_mode = 'gevent'
+        except ImportError:
+            pass
+
+    if async_mode is None:
+        async_mode = 'threading'
+
+# monkey patching is necessary because this application uses a background
+# thread
+if async_mode == 'eventlet':
+    import eventlet
+    eventlet.monkey_patch()
+elif async_mode == 'gevent':
+    from gevent import monkey
+    monkey.patch_all()
+
 socketio = io.SocketIO(app)
+app.logger.info("using {} mode for SocketIO".format(async_mode))
 
 rooms = {}
 
@@ -43,9 +77,11 @@ def resolve(a, b):
 
 def publishscore(room):
     'Tell connected clients the score.'
-    db.publish(room, json.dumps({'score': {
+    score = {0: '0', 1: '0'}
+    score.update({
         idx: db.get("score-{}-{}".format(room, idx))
-        for idx in db.lrange("teams-{}".format(room), 0, -1)}}))
+        for idx in db.lrange("teams-{}".format(room), 0, -1)})
+    db.publish(room, json.dumps({'score': score}))
 
 
 def checkredis():
@@ -62,6 +98,7 @@ def checkredis():
             if isinstance(message['data'], long):
                 break
 
+            app.logger.debug("got msg: %s", message)
             room = message['channel']
             data = json.loads(message['data'])
             if 'score' in data.keys():
@@ -91,7 +128,7 @@ def index():
 
 
 @socketio.on('connect')
-def connect(_):
+def connect():
     'Report back with token.'
     token = flask.session.get('token', 'notoken')
     app.logger.info("Client {} connected".format(token))
@@ -166,7 +203,7 @@ def play(message):
     existingchoice = db.rpop(room)
     if existingchoice is not None:
         existingchoice = json.loads(existingchoice)
-    if existingchoice is None or team==existingchoice[0]:
+    if existingchoice is None or team == existingchoice[0]:
         # when client disco/reco-nects, don't play against self :)
         db.lpush(room, json.dumps((team, message['choice'])))
         db.publish(room, json.dumps({'move': team}))
@@ -197,4 +234,9 @@ def log_email(address):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0')
+    try:
+        socketio.run(app, host='0.0.0.0')
+    finally:
+        for ROOM, NUMPLAYERS in rooms.iteritems():
+            for _ in range(NUMPLAYERS):
+                db.decr("players-{}".format(ROOM))

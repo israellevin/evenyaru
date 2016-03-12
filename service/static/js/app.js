@@ -44,7 +44,7 @@ var QUIPS = {
     }
 };
 
-angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
+angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigProvider){
     $ionicConfigProvider.views.maxCache(0);
 })
 
@@ -62,13 +62,13 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
 
 .controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
     var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var timeoutObj;
     socket.emit('connect', {});
 
     socket.on('connected', function(message){
         $scope.token = message.token;
         $scope.room = $location.search().room || 'stam';
         $scope.join($scope.room);
-        $scope.$apply();
     });
 
     socket.on('fail', function(message){
@@ -108,7 +108,7 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
     });
 
     socket.on('move', function(message){
-        if(message.move === $scope.team){
+        if(message.move == $scope.team){
             $scope.state = 2;
         }else{
             $scope.state = -1;
@@ -120,32 +120,33 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         var rightquips, modifier, you, them='';
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
-            modifier = 3;
+            modifier = 0;
             you = them = 'cool';
+            new Audio('http://evenyaru.herokuapp.com/audio/kiss.ogg').play();
         }else if(message.winner === $scope.team){
             rightquips = QUIPS.win[$scope.choice];
             modifier = 2;
             you = 'win'; them = 'lose';
+            new Audio('http://evenyaru.herokuapp.com/audio/win.ogg').play();
         }else{
             rightquips = QUIPS.lose[$scope.choice];
-            modifier = 4;
+            modifier = 1;
             you = 'lose'; them = 'win';
+            new Audio('http://evenyaru.herokuapp.com/audio/noo.ogg').play();
         }
         $scope.quip = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
-        console.log($scope.response);
         $scope.choicesuccess =  you;
         $scope.them = them;
+        $scope.waiting='no';
         $scope.message += ' שחק שוב:';
-	$scope.autoplay = '';
-	
-        // TODO Here comes the animation.
+        $scope.autoplay = '';
         $timeout(function(){
-	    $scope.state = 3;
-	    $timeout(function(){
-		$scope.state = 0;
-		},  10000);	
-        },  9000);
+            $scope.state = 3;
+            timeoutObj = $timeout(function(){
+                $scope.state = 0;
+            },  10000);
+        },  4000);
     });
 
     $scope.join = function(room, override){
@@ -157,12 +158,27 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         socket.emit('play', {choice: choice});
         $scope.choice = choice;
         $scope.response = false;
-	$scope.choicesuccess='';
-	$scope.them ='';
+        $scope.choicesuccess='';
+        $scope.them ='';
         $scope.$apply();
     };
 
     $scope.log_email = function(address){
         socket.emit('log_email', address);
     };
+
+    $scope.gotomail = function(){
+        $scope.state = 3;
+        timeoutObj = $timeout(function(){
+            $scope.state = 0;
+        },  10000);
+    };
+
+    $scope.cancelTimeout = function(){
+        $timeout.cancel(timeoutObj);
+        timeoutObj = $timeout(function(){
+            $scope.state = 0;
+        },  10000);
+    };
+
 });
