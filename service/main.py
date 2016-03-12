@@ -1,5 +1,5 @@
 'Evenyaru server'
-# pylint: disable=wrong-import-position,import-error,invalid-name
+# pylint: disable=import-error,invalid-name
 import os
 import time
 import uuid
@@ -130,7 +130,7 @@ def index():
 @socketio.on('connect')
 def connect():
     'Report back with token.'
-    token = flask.session.get('token', 'notoken')
+    token = flask.session.get('token', flask.request.sid)
     app.logger.info("Client {} connected".format(token))
     io.emit('connected', {'token': token})
 
@@ -145,7 +145,7 @@ def join(message):
         db.decr(numplayerskey)
         io.emit('fail', {'room': room, 'type': 'room is full'})
         return
-    token = flask.session.get('token')
+    token = flask.request.sid
     tokenteamkey = "team-{}".format(token)
     roomteamskey = "teams-{}".format(room)
     if numplayers > 1:
@@ -177,7 +177,7 @@ def join(message):
 @socketio.on('disconnect')
 def disconnect():
     'Cleanup.'
-    app.logger.info("Client {} disconnected".format(flask.session.get('token')))
+    app.logger.info("Client {} disconnected".format(flask.request.sid))
     if 'room' in flask.session.keys():
         room = flask.session['room']
         team = flask.session['team']
@@ -227,7 +227,7 @@ def log_email(address):
     if '@' in email.utils.parseaddr(address)[1]:
         app.logger.info(
             "Client %s in team %s in room %s gave address '%s'",
-            flask.session.get('token'),
+            flask.session.get(flask.request.sid),
             flask.session.get('team'),
             flask.session.get('room'),
             address)
