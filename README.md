@@ -8,7 +8,6 @@ This is the Android apk version of the Evenyaru server, implemented in kivy as a
   instead of the Heroku server.
 
 
-### Current status
 
 What I did was create a mock `redis.py` that uses
 `slite3dbm` (they don't have `anydbm` on android)
@@ -16,49 +15,49 @@ where methods are wrapped in a Lock.acquire(True)
 for thread-safety (not sure it's needed, but better
 than thread-sorry).
 
-At the moment it runs on linux, but the apk crashes
-because some `.so` files get built as linux and not ARM.
-Buildozer/python-for-android handle such things
-with what they call recipes.
+### Current status
 
-Buildozer's `android` target uses a branch of python-for-android
-called `old_toolchain`, and recipes there are shell script based
-(in `master`, they're python code). Some recipes only exist in one
-branch and not the other.
+* I've switched requirements to lastest flask_socketio (both at
+  `requirements.txt` and `buildozer.spec`).
 
-#### Where do we go from here?
+* Both linux and apk run (e.g. you can get `/img/ionic.png`),
+  but of course socket.io is incompatible.
 
-Either
+* When you do `DEBUG=1 runserver.sh` and browse to `/`,
+  you get `TypeError: connect() takes exactly 1 argument (0 given)`
 
-* Add recipes so that gevent, greenlet, etc. build correctly
-* Surprisingly, if we use the latest `Flask_SocketIO`
-  (not  0.6.0), gevent is no longer needed and it compiles
-  nicely, but then we need to change stuff at both server
-  and client (different version of socket.io protocol),
-  and so far I couldn't get this to run even on linux.
-* Try the `android_new` target (uses p4a's
-  master branch), but it doesn't have gevent [and maybe
-  there are reasons why they don't yet mention it
-  in the buildozer docs yet ;) ]
+* You can't run flask in debug mode on apk (don't know why).
+  Service crashes [without saying why in the logcat or its own log].
 
-### Adding our own recipes [as far as I understand this]
+### Building
 
-To add our own recipes [ as explained at
-http://buildozer.readthedocs.org/en/latest/contribute.html ],
-we set `android.p4a_dir` to a folder created with
-`git clone -b old_toolchain https://github.com/kivy/python-for-android`
+* [Short] docs are at http://buildozer.readthedocs.org/
+  (and http://python-for-android.readthedocs.org may also be handy)
 
-and then we mess with the `recipes/` folder
-(e.g. I've added `gevent102` which is a copy of `gevent`, but with ver `1.0.2`).
+* Kivy you can install from pip or git, but buildozer I've cloned from
+  https://github.com/kivy/buildozer
+  (I'm almost sure it matters).
 
-I have some alf-baked recipes there, but nothing worth committing so far.
+* It is important not to run buildozer from a virtual env,
+  (don't remember url, but they say that).
+  At my "normal python2" I have kivy installed (1.9.1, but 1.9.2
+  is also OK), and cython 0.23 (I think kivy would install that,
+  but anyway - you need it).
 
-### State-changing buildozer by-products
+* To build: `buildozer -v android debug`
 
-If `android.p4a_dir` is not set, when you rm `.buildozer/` you get a clean slate,
-but if not, it creates `dist/MYAPP/` under the p4a dir, and [if build breaks]
-there's also a `build/` folder there you have to remove.
+* To deploy via usb: `buildozer -v android deploy`
 
+* To run and logcat: `buildozer -v android run logcat | tee android.log`
+
+### Runtime
+
+* Sevrice logs to `/sdcard/.evenyaru-logs/` (`service/redis.py` says that)
+
+* If server crashes and misses a client disconnect, easiest is to
+  delete `/sdcard/.evenyaru3.sqlite3` [perhaps on startup server could
+  assume no clients are connected, and fix redis accordingly, but
+  anyway - deleting the db works :)]
 
 ----
 

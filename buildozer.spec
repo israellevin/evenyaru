@@ -13,7 +13,7 @@ package.domain = ru.evenya
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas,html,css,js,json,ogg
+source.include_exts = py,png,jpg,kv,atlas,html,css,map,js,json,ogg
 
 # (list) Source files to exclude (let empty to not exclude anything)
 #source.exclude_exts = spec
@@ -34,8 +34,9 @@ version.filename = %(source.dir)s/main.py
 
 # (list) Application requirements
 # comma seperated e.g. requirements = sqlite3,kivy
-### Note: if you need a recipe, [IIUC] you can't do ==ver (e.g. gevent102 is a recipe)
-requirements = sqlite3, sqlite3dbm==0.1.4, markupsafe==0.23, flask, greenlet049, gevent102, Flask-SocketIO==0.6.0, kivy
+### Note: if you there's a recipe (e.g. when c code is involved), [IIUC] you can't do ==ver
+### OTOH, it's handy to get [e.g.] markupsafe from pip instead of fixing their broken recipe
+requirements = sqlite3, sqlite3dbm==0.1.4, markupsafe==0.23, flask, flask_socketio, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -107,7 +108,7 @@ android.sdk_path = /opt/android-sdk/
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
 ###@@@ this is a patched clone of -b old_toolchain github.com/kivy/python-for-android
-android.p4a_dir = /opt/buildozer/py4buildozer
+#android.p4a_dir = /opt/buildozer/py4buildozer
 
 # (list) python-for-android whitelist
 #android.p4a_whitelist =
