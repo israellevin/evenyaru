@@ -130,7 +130,7 @@ def index():
 @socketio.on('connect')
 def connect():
     'Report back with token.'
-    token = flask.session.get('token', 'notoken')
+    token = flask.session.get('token', str(uuid.uuid4()))
     app.logger.info("Client {} connected".format(token))
     io.emit('connected', {'token': token})
 
