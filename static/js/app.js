@@ -69,7 +69,6 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         $scope.token = message.token;
         $scope.room = $location.search().room || 'stam';
         $scope.join($scope.room);
-        $scope.$apply();
     });
 
     socket.on('fail', function(message){
@@ -104,7 +103,6 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     });
 
     socket.on('score', function(message){
-        console.log('score:', message);
         $scope.score = message.score;
         $scope.$apply();
     });
@@ -122,7 +120,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         var rightquips, modifier, you, them='';
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
-            modifier = 3;
+            modifier = 0;
             you = them = 'cool';
             new Audio('http://evenyaru.herokuapp.com/audio/kiss.ogg').play();
         }else if(message.winner === $scope.team){
@@ -132,13 +130,12 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
             new Audio('http://evenyaru.herokuapp.com/audio/win.ogg').play();
         }else{
             rightquips = QUIPS.lose[$scope.choice];
-            modifier = 4;
+            modifier = 1;
             you = 'lose'; them = 'win';
             new Audio('http://evenyaru.herokuapp.com/audio/noo.ogg').play();
         }
         $scope.quip = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
-        console.log($scope.response);
         $scope.choicesuccess =  you;
         $scope.them = them;
         $scope.waiting='no';
