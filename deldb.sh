@@ -1,2 +1,2 @@
 #!/bin/sh
-rm service/.evenyaru.sqlite3
+rm service/.evenyaru.json

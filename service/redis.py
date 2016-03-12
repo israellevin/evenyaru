@@ -12,11 +12,9 @@ if platform=='android':
     Config.set('kivy', 'log_dir', '/sdcard/.evenyaru-logs')
 ## ---------------------------------
 
-import sqlite3dbm
+import json_store
 from threading import Lock
 from Queue import Queue, Empty
-from kivy import platform
-from kivy.logger import Logger
 
 class MockPubSub:
     """Assumes a single subscriber.
@@ -55,7 +53,7 @@ class MockRedis:
     _pubsub = None
 
     def __init__(self, db_filname):
-        self.shelf = sqlite3dbm.sshelve.open(db_filname)
+        self.shelf = json_store.open(db_filname)
         self.lock = Lock()
         self._pubsub = MockPubSub()
     
@@ -197,6 +195,11 @@ class MockRedis:
         self._pubsub.publish(channel, message)
     
 def from_url(whatever):
-    return MockRedis(
-            platform=='android' and '/sdcard/.evenyaru.sqlite3' \
-            or './.evenyaru.sqlite3')
+    shelfname = './.evenyaru.json'
+    try:
+        from kivy import platform
+        if platform=='android':
+            shelfname = './.evenyaru.json'
+    except ImportError:
+        pass
+    return MockRedis(shelfname)

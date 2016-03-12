@@ -20,13 +20,12 @@ than thread-sorry).
 * I've switched requirements to lastest flask_socketio (both at
   `requirements.txt` and `buildozer.spec`).
 
-* Both linux and apk run (e.g. you can get `/img/ionic.png`),
-  but of course socket.io is incompatible.
+* Both linux and apk run
 
 * When you do `DEBUG=1 runserver.sh` and browse to `/`,
   you get `TypeError: connect() takes exactly 1 argument (0 given)`
 
-* You can't run flask in debug mode on apk (don't know why).
+* You run `DEBUG=1 runserver.sh` but can't run in apk as debug (don't know why).
   Service crashes [without saying why in the logcat or its own log].
 
 ### Building
@@ -54,10 +53,7 @@ than thread-sorry).
 
 * Sevrice logs to `/sdcard/.evenyaru-logs/` (`service/redis.py` says that)
 
-* If server crashes and misses a client disconnect, easiest is to
-  delete `/sdcard/.evenyaru3.sqlite3` [perhaps on startup server could
-  assume no clients are connected, and fix redis accordingly, but
-  anyway - deleting the db works :)]
+* "redis db" is at `/sdcard/.evenyaru3.json`
 
 ----
 

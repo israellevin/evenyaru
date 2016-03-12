@@ -1,7 +1,7 @@
 run.sh
 activate
 android.log
-service/.evenyaru.sqlite3
+service/.evenyaru.json
 env/
 .buildozer/
 bin/

@@ -2,6 +2,7 @@ Flask==0.10.1
 Flask-SocketIO==2.2
 itsdangerous==0.24
 Jinja2==2.8
+json-store==2.1
 Kivy==1.9.1
 Kivy-Garden==0.1.4
 MarkupSafe==0.23
@@ -9,5 +10,4 @@ python-engineio==0.9.0
 python-socketio==1.1
 requests==2.9.1
 six==1.10.0
-sqlite3dbm==0.1.4
 Werkzeug==0.11.4

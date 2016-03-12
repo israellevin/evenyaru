@@ -36,7 +36,7 @@ version.filename = %(source.dir)s/main.py
 # comma seperated e.g. requirements = sqlite3,kivy
 ### Note: if you there's a recipe (e.g. when c code is involved), [IIUC] you can't do ==ver
 ### OTOH, it's handy to get [e.g.] markupsafe from pip instead of fixing their broken recipe
-requirements = sqlite3, sqlite3dbm==0.1.4, markupsafe==0.23, flask, flask_socketio, kivy
+requirements = json-store==2.1, markupsafe==0.23, flask, flask_socketio, kivy
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
