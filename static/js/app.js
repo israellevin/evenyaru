@@ -44,7 +44,7 @@ var QUIPS = {
     }
 };
 
-angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
+angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigProvider){
     $ionicConfigProvider.views.maxCache(0);
 })
 
@@ -124,32 +124,31 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
             rightquips = QUIPS.draw[$scope.choice];
             modifier = 3;
             you = them = 'cool';
-        new Audio('http://evenyaru.herokuapp.com/audio/kiss.ogg').play();
+            new Audio('http://evenyaru.herokuapp.com/audio/kiss.ogg').play();
         }else if(message.winner === $scope.team){
             rightquips = QUIPS.win[$scope.choice];
             modifier = 2;
             you = 'win'; them = 'lose';
-        new Audio('http://evenyaru.herokuapp.com/audio/win.ogg').play();
+            new Audio('http://evenyaru.herokuapp.com/audio/win.ogg').play();
         }else{
             rightquips = QUIPS.lose[$scope.choice];
             modifier = 4;
             you = 'lose'; them = 'win';
-        new Audio('http://evenyaru.herokuapp.com/audio/noo.ogg').play();
+            new Audio('http://evenyaru.herokuapp.com/audio/noo.ogg').play();
         }
         $scope.quip = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
         console.log($scope.response);
         $scope.choicesuccess =  you;
         $scope.them = them;
-    $scope.waiting='no';
+        $scope.waiting='no';
         $scope.message += ' שחק שוב:';
         $scope.autoplay = '';
-        // TODO Here comes the animation.
         $timeout(function(){
-        $scope.state = 3;
-        timeoutObj = $timeout(function(){
-        $scope.state = 0;
-        },  10000);
+            $scope.state = 3;
+            timeoutObj = $timeout(function(){
+                $scope.state = 0;
+            },  10000);
         },  4000);
     });
 
@@ -162,27 +161,27 @@ angular.module('evenyaru', ['ionic']).config(function($ionicConfigProvider){
         socket.emit('play', {choice: choice});
         $scope.choice = choice;
         $scope.response = false;
-    $scope.choicesuccess='';
-    $scope.them ='';
+        $scope.choicesuccess='';
+        $scope.them ='';
         $scope.$apply();
     };
 
     $scope.log_email = function(address){
         socket.emit('log_email', address);
     };
-    
+
     $scope.gotomail = function(){
-    $scope.state = 3;
-    timeoutObj = $timeout(function(){
-        $scope.state = 0;
-    },  10000);
+        $scope.state = 3;
+        timeoutObj = $timeout(function(){
+            $scope.state = 0;
+        },  10000);
     };
-    
+
     $scope.cancelTimeout = function(){
         $timeout.cancel(timeoutObj);
-    timeoutObj = $timeout(function(){
-        $scope.state = 0;
-    },  10000);
+        timeoutObj = $timeout(function(){
+            $scope.state = 0;
+        },  10000);
     };
-    
+
 });
