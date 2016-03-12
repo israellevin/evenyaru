@@ -150,13 +150,10 @@ def join(message):
     roomteamskey = "teams-{}".format(room)
     if numplayers > 1:
         team = 1 - int(db.lrange(roomteamskey, 0, 1)[0])
-        if team != int(db.get(tokenteamkey) or team):
-            if message.get('override'):
-                team = 1 - team
-            else:
-                db.decr(numplayerskey)
-                io.emit('fail', {'room': room, 'type': 'wrong team'})
-                return
+        if team != int(db.get(tokenteamkey) or team) and not message.get('override'):
+            db.decr(numplayerskey)
+            io.emit('fail', {'room': room, 'type': 'wrong team'})
+            return
     else:
         team = (db.get(tokenteamkey) or 0)
     db.lpush(roomteamskey, team)
