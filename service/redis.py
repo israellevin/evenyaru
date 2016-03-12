@@ -199,7 +199,7 @@ def from_url(whatever):
     try:
         from kivy import platform
         if platform=='android':
-            shelfname = './.evenyaru.json'
+            shelfname = '/sdcard/.evenyaru.json'
     except ImportError:
         pass
     return MockRedis(shelfname)

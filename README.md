@@ -53,7 +53,7 @@ than thread-sorry).
 
 * Sevrice logs to `/sdcard/.evenyaru-logs/` (`service/redis.py` says that)
 
-* "redis db" is at `/sdcard/.evenyaru3.json`
+* "redis db" is at `/sdcard/.evenyaru.json`
 
 ----
 
