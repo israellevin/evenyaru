@@ -202,4 +202,16 @@ def from_url(whatever):
             shelfname = '/sdcard/.evenyaru.json'
     except ImportError:
         pass
-    return MockRedis(shelfname)
+    db = MockRedis(shelfname)
+    # Kludge in case server died without detecting disconnects
+    for k in db.shelf.keys():
+        if k.startswith('players-') and db.shelf[k]>0:
+            db.shelf[k] = 0
+            room = k.split('-')[1]
+            db.shelf[room] = []
+            db.shelf['teams-{}'.format(room)] = []
+            db.shelf.sync()
+        elif k.startswith('team-'):
+            del db.shelf[k]
+            db.shelf.sync()
+    return db
