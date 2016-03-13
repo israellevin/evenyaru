@@ -99,12 +99,12 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         $scope.message = 'בחר:';
         $scope.ready = true;
         $scope.state = 0;
-        $scope.$apply();
+        $scope.$applyAsync();
     });
 
     socket.on('score', function(message){
         $scope.score = message.score;
-        $scope.$apply();
+        $scope.$applyAsync();
     });
 
     socket.on('move', function(message){
@@ -113,7 +113,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         }else{
             $scope.state = -1;
         }
-        $scope.$apply();
+        $scope.$applyAsync();
     });
 
     socket.on('winner', function(message){
@@ -160,7 +160,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         $scope.response = false;
         $scope.choicesuccess='';
         $scope.them ='';
-        $scope.$apply();
+        $scope.$applyAsync();
     };
 
     $scope.log_email = function(address){
