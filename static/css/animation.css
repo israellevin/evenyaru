@@ -147,7 +147,7 @@
 /*========Our rock fighting  ========*/
 
 @keyframes us_rock {
-	0%{background-image: url('../img/rock_s2.png');}
+    0%{background-image: url('../img/rock_s2.png');}
    25% {background-image: url('../img/rock_s_close.png');}
    50%{background-image: url('../img/rock_s2.png');}
    75% {background-image: url('../img/rock_s_close.png'); }
@@ -164,7 +164,7 @@
 /*========Our paper fighting ========*/
 
 @keyframes us_paper {
-	0%{background-image: url('../img/paper_s2.png');}
+    0%{background-image: url('../img/paper_s2.png');}
    25% {background-image: url('../img/paper_s_close.png');}
    50%{background-image: url('../img/paper_s2.png');}
    75% {background-image: url('../img/paper_s_close.png'); }
@@ -235,21 +235,35 @@
 
 /*========END of LOSE ANIMATION========*/
 @keyframes lose_fade {
-	0% {opacity: 1;}
-	100%  {transform: scale(0.5); opacity: 0;}
-	}
+    0% {opacity: 1;}
+    100%  {transform: scale(0.5); opacity: 0;}
+    }
 @-webkit-keyframes lose_fade {0% {opacity: 1;}
-	100%  {transform: scale(0.5); opacity: 0;}
-	}
+    100%  {transform: scale(0.5); opacity: 0;}
+    }
 /*========END of WIN ANIMATION========*/
 @keyframes win_fade {
-	0% {opacity: 1;}
-	100%  {transform: scale(1.2); opacity: 0;}
-	}
+    0% {opacity: 1;}
+    100%  {transform: scale(1.2); opacity: 0;}
+    }
 @-webkit-keyframes win_fade {0% {opacity: 1;}
-	100%  {transform: scale(1.2); opacity: 0;}
-	}
+    100%  {transform: scale(1.2); opacity: 0;}
+    }
 /*================================*/
+
+/*========BLINK ANIMATION========*/
+@keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0;}
+    100%  {opacity: 1;}
+    }
+@-webkit-keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0;}
+    100%  {opacity: 1;}
+    }
+/*================================*/
+
 
 @keyframes lose {
  0% {

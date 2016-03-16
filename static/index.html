@@ -20,14 +20,17 @@
         <ion-content scroll=false>
             <div class='main'>
                 <div class=header ng-if="team == 0">
-                    <div class='us green'>ירוקה:  {{score[0]}} נקודות</div>
-                    <div class=uncleSam>עזור לירוקים לנצח!</div>
-                    <div class='them-s purple'>סגולה: {{score[1]}} נקודות</div>
+                    <div class='us green'>ירוקים:  {{score[0]}} נקודות</div>
+                    <div class=uncleSam>עזור לירוקים לנצח!
+                        <div ng-if="state===-1"  class=waiting4U>הסגולים כבר בחרו</div>
+                    </div>
+                    <div class='them-s purple'>סגולים: {{score[1]}} נקודות</div>
                 </div>
                 <div class=header ng-if="team == 1">
-                    <div class='us purple'>סגולה:  {{score[1]}} נקודות</div>
-                    <div class=uncleSam>עזור לסגולים לנצח!</div>
-                    <div class='them-s green'>ירוקה: {{score[0]}} נקודות</div>
+                    <div class='us purple'>סגולים:  {{score[1]}} נקודות</div>
+                    <div  class=uncleSam>עזור לסגולים לנצח!<div ng-if="state===-1" class=waiting4U>הירוקים כבר בחרו</div>
+                    </div>
+                    <div class='them-s green'>ירוקים: {{score[0]}} נקודות</div>
                 </div>
 
                 <div id=selector ng-if="state < 1">
@@ -46,32 +49,33 @@
                         </div>
                     </div>
                     <div ng-if="choicesuccess==='win'" class=ourresulttext>
-            <div>ניצחת!</div>
-            </div>
+                        <div>ניצחת (-: קבל נקודה!</div>
+                    </div>
                     <div ng-if="choicesuccess==='lose'" class=ourresulttext>
-                <div>הפסדת...</div>
-            </div>
+                        <div>הפסדת )-: 0 נקודות..</div>
+                    </div>
                     <div ng-if="choicesuccess==='cool'" class=ourresulttext>
-            <div>תיקו! 2 נקודות!</div>
-            </div>
+                        <div>תיקו *-: 2 נקודות!</div>
+                    </div>
                     <div ng-if="response" id=response class={{them}}>
                         <div  class='them {{response}}' ></div>
                     </div>
                     <div class="mail-fight"></div>
-            <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
+                    <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
                 </div>
-                <div id=postfight ng-if="state === 3">
+                <div id=postfight ng-if="state == 3">
                     <div id=quip>{{quip}}</div>
                     <div id=call4arms>נכון שבא לך להשתתף במחקר המגניב שלנו, נכון? נכון?
-                        </br>
+                        <br>
                         ...תן לנו את האימייל שלך ונשלח לך את כל הפרטים
-                        </br>
+                        <br>
                         לא נעביר אותו לאף אחד. נשבעים!
                     </div>
                     <form ng-submit="log_email(email); email='';">
                         דואל: <input id=imail ng-model=email ng-keypress="cancelTimeout()">
                         <input id=isend type=submit value="שלח">
                     </form>
+                    <div id=back2game>בקרוב חוזרים למשחק...</div>
                 </div>
             </div>
         </ion-content>
