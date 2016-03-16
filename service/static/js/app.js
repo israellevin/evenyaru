@@ -2,15 +2,15 @@ var MOVES = ['rock', 'paper', 'scissors'];
 var QUIPS = {
     'win': {
         'rock': [
-            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"באתי, ראיתי, ניצחתי." ~ יוליוס קיסר',
             '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ],
         'paper': [
-            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"באתי, ראיתי, ניצחתי." ~ יוליוס קיסר',
             '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ],
         'scissors': [
-            '"באתי, ראיתי, ניצחתי." (בלטינית: " Veni Vidi Vici") ~ יוליוס קיסר',
+            '"באתי, ראיתי, ניצחתי." ~ יוליוס קיסר',
             '"אין משנים קבוצה מנצחת." ~ פתגם צרפתי'
         ]
     },
@@ -60,15 +60,22 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     });
 })
 
-.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout){
+.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval){
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     var timeoutObj;
+    var prevPage=0;
+    var call4arms_cancelObj;
+    var call4arms_sound = new Audio('http://evenyaru.herokuapp.com/audio/trumpet2.ogg');
+    var call4win_cancelObj;
+    var call4win_sound = new Audio('http://evenyaru.herokuapp.com/audio/whistle.ogg');
+
     socket.emit('connect', {});
 
     socket.on('connected', function(message){
         $scope.token = message.token;
         $scope.room = $location.search().room || 'stam';
         $scope.join($scope.room);
+        $scope.$applyAsync();
     });
 
     socket.on('fail', function(message){
@@ -99,25 +106,41 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         $scope.message = 'בחר:';
         $scope.ready = true;
         $scope.state = 0;
-        $scope.$apply();
+        $scope.$applyAsync();
+        if (typeof call4arms_cancelObj === "undefined") {
+            call4arms_cancelObj = $interval(function(){
+                call4arms_sound.play();
+            }, 120000);
+        }
     });
 
     socket.on('score', function(message){
         $scope.score = message.score;
-        $scope.$apply();
+        $scope.$applyAsync();
     });
 
     socket.on('move', function(message){
         if(message.move == $scope.team){
+            $interval.cancel(call4arms_cancelObj);
+            delete call4arms_cancelObj ;
             $scope.state = 2;
         }else{
+            $interval.cancel(call4arms_cancelObj);
+            delete call4arms_cancelObj;
+            if (typeof call4win_cancelObj === "undefined") {
+                call4win_cancelObj = $interval(function(){
+                    call4win_sound.play();
+                }, 15000);
+            }
             $scope.state = -1;
         }
-        $scope.$apply();
+        $scope.$applyAsync();
     });
 
     socket.on('winner', function(message){
         var rightquips, modifier, you, them='';
+        $interval.cancel(call4win_cancelObj);
+        delete call4win_cancelObj;
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
             modifier = 0;
@@ -145,6 +168,11 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
             $scope.state = 3;
             timeoutObj = $timeout(function(){
                 $scope.state = 0;
+                if(typeof call4arms_cancelObj === "undefined"){
+                    call4arms_cancelObj = $interval(function(){
+                        call4arms_sound.play();
+                    }, 120000);
+                }
             },  10000);
         },  4000);
     });
@@ -158,26 +186,29 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         socket.emit('play', {choice: choice});
         $scope.choice = choice;
         $scope.response = false;
-        $scope.choicesuccess='';
-        $scope.them ='';
-        $scope.$apply();
+        $scope.choicesuccess = '';
+        $scope.them = '';
+        $scope.$applyAsync();
     };
 
     $scope.log_email = function(address){
         socket.emit('log_email', address);
+        $scope.state = prevPage;
     };
 
     $scope.gotomail = function(){
+        if($scope.state === 2) prevPage = $scope.state;
         $scope.state = 3;
         timeoutObj = $timeout(function(){
-            $scope.state = 0;
+            $scope.state = prevPage;
+            prevPage = 0;
         },  10000);
     };
 
     $scope.cancelTimeout = function(){
         $timeout.cancel(timeoutObj);
         timeoutObj = $timeout(function(){
-            $scope.state = 0;
+            $scope.state = prevPage;
         },  10000);
     };
 
