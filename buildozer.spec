@@ -26,7 +26,7 @@ source.exclude_dirs = attic, tests, bin
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.2
+version = 0.3
 
 # (str) Application versioning (method 2)
 #version.regex = __version__ = ['"](.*)['"]
@@ -46,7 +46,7 @@ requirements = json-store==2.1, markupsafe==0.23, flask, flask_socketio, kivy
 #garden_requirements =
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = splash.png
 
 # (str) Icon of the application
 icon.filename = %(source.dir)s/icon.png
@@ -85,7 +85,7 @@ android.api = 18
 android.minapi = 9
 
 # (int) Android SDK version to use
-android.sdk = 20
+android.sdk = 24
 
 # (str) Android NDK version to use
 #android.ndk = 9c
@@ -96,19 +96,16 @@ android.ndk = 10e
 #android.private_storage = True
 
 # (str) Android NDK directory (if empty, it will be automatically downloaded.)
-###!!! Either change to what you use on your machine, or comment this out
-android.ndk_path = /opt/android-sdk/android-ndk-r10e/
+#android.ndk_path =
 
 # (str) Android SDK directory (if empty, it will be automatically downloaded.)
-###!!! Either change to what you use on your machine, or comment this out
-android.sdk_path = /opt/android-sdk/
+#android.sdk_path =
 
 # (str) ANT directory (if empty, it will be automatically downloaded.)
 #android.ant_path =
 
 # (str) python-for-android git clone directory (if empty, it will be automatically cloned from github)
-###@@@ this is a patched clone of -b old_toolchain github.com/kivy/python-for-android
-#android.p4a_dir = /opt/buildozer/py4buildozer
+#android.p4a_dir =
 
 # (list) python-for-android whitelist
 #android.p4a_whitelist =

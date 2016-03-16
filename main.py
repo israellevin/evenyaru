@@ -36,7 +36,7 @@ class ClientServerApp(App):
     def start_service(self):
         if platform == 'android':
             from android import AndroidService
-            service = AndroidService('Evenyaru server', 'Browse to port 5000, or click here for a big red button')
+            service = AndroidService('Evenyaru server', 'Click here for the stop button')
             service.start('Evenyaru server started')
             self.service = service
             return True
