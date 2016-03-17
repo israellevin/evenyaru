@@ -11,7 +11,7 @@
 .header div{font-weight:bold; font-size:22px; width:32%;display:inline-block;text-align:center;padding:0.4em 0;}
 .us{float:right;border-radius: 2.2em;margin-top: 0.3em;margin-right: 0.2em;}
 .them-s{float:left;border-radius: 2.2em;margin-top: 0.3em;margin-left: 0.2em;}
-.uncleSam{font-family: BN Zika;font-size: 20px !important;padding-top: 0.8em !important;}
+.uncleSam{font-size: 16px !important;}
 .green {background:#247D19;color: white;/*border-color: #9eaf7c;border-style: double;border-width: 7px;*/}
 .purple {background:#7D326E;color: white;/*border-color: #9d87d3;border-style: double;border-width: 7px;*/}
 
@@ -29,10 +29,7 @@
 #paper {background:url('../img/paper2.png') no-repeat top left transparent;}
 #rock {background:url('../img/rock2.png') no-repeat top left transparent;}
 
-.waiting4U {/*-webkit-animation: blink 5s steps(1) infinite;
-                            animation: blink 5s steps(1)  infinite;*/
-							position:absolute;    right: 12em;top: 2.5em;
-							font-size: 17px !important;color: darkred;line-height: 0.5;font-weight: normal;}
+.waiting4U {position:absolute; right: 12em;top: 2em; font-size: 17px !important;color: darkred;line-height: 0.5;font-weight: normal;}
 
 #fight {position:relative;}
 
@@ -70,8 +67,7 @@
 #quip {font-family:BN zika;margin:1em 0;text-align:center;font-size: 18px;}
 form {text-align: center;margin-top: 1em;}
 #call4arms {margin-top: 1em;text-align:center;font-weight:bold;}
-#back2game {font-family:BN zika;margin-top: 1em;text-align:center;font-weight:bold;
-						-webkit-animation: choose 3s infinite ease-in-out;animation: choose 3s ease-in infinite;}
+#back2game {margin:1.5em auto;display:block;font-weight:bold;color:darkred;}
 /*=====email bttn*/
 
 .mail {

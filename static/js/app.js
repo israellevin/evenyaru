@@ -212,4 +212,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         },  10000);
     };
 
+    $scope.gotomain = function(){
+        $scope.state = 0;
+    };
 });
