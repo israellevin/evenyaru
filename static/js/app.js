@@ -61,13 +61,17 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
 })
 
 .controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval){
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var home = 'http://' + document.domain + ':' + location.port;
+    var socket = io.connect(home);
     var timeoutObj;
     var prevPage=0;
     var call4arms_cancelObj;
-    var call4arms_sound = new Audio('http://evenyaru.herokuapp.com/audio/trumpet2.ogg');
+    var call4arms_sound = new Audio(home + '/audio/trumpet2.ogg');
     var call4win_cancelObj;
-    var call4win_sound = new Audio('http://evenyaru.herokuapp.com/audio/whistle.ogg');
+    var call4win_sound = new Audio(home + '/audio/whistle.ogg');
+    var kiss_sound = new Audio(home + '/audio/kiss.ogg');
+    var win_sound = new Audio(home + '/audio/win.ogg');
+    var noo_sound = new Audio(home + '/audio/noo.ogg');
 
     socket.emit('connect', {});
 
@@ -107,7 +111,10 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         $scope.ready = true;
         $scope.state = 0;
         $scope.$applyAsync();
-        if (typeof call4arms_cancelObj === "undefined") {
+        if(
+            typeof call4arms_cancelObj === 'undefined' ||
+            2 === call4arms_cancelObj.$$state.status
+        ){
             call4arms_cancelObj = $interval(function(){
                 call4arms_sound.play();
             }, 120000);
@@ -120,14 +127,14 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     });
 
     socket.on('move', function(message){
+        $interval.cancel(call4arms_cancelObj);
         if(message.move == $scope.team){
-            $interval.cancel(call4arms_cancelObj);
-            delete call4arms_cancelObj ;
             $scope.state = 2;
         }else{
-            $interval.cancel(call4arms_cancelObj);
-            delete call4arms_cancelObj;
-            if (typeof call4win_cancelObj === "undefined") {
+            if(
+                typeof call4win_cancelObj === 'undefined' ||
+                2 === call4win_cancelObj.$$state.status
+            ){
                 call4win_cancelObj = $interval(function(){
                     call4win_sound.play();
                 }, 15000);
@@ -140,22 +147,21 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     socket.on('winner', function(message){
         var rightquips, modifier, you, them='';
         $interval.cancel(call4win_cancelObj);
-        delete call4win_cancelObj;
         if(null === message.winner){
             rightquips = QUIPS.draw[$scope.choice];
             modifier = 0;
             you = them = 'cool';
-            new Audio('http://evenyaru.herokuapp.com/audio/kiss.ogg').play();
+            kiss_sound.play();
         }else if(message.winner === $scope.team){
             rightquips = QUIPS.win[$scope.choice];
             modifier = 2;
             you = 'win'; them = 'lose';
-            new Audio('http://evenyaru.herokuapp.com/audio/win.ogg').play();
+            win_sound.play();
         }else{
             rightquips = QUIPS.lose[$scope.choice];
             modifier = 1;
             you = 'lose'; them = 'win';
-            new Audio('http://evenyaru.herokuapp.com/audio/noo.ogg').play();
+            noo_sound.play();
         }
         $scope.quip = rightquips[Math.floor(Math.random() * rightquips.length)];
         $scope.response = MOVES[(MOVES.indexOf($scope.choice) + modifier) % 3];
@@ -168,7 +174,10 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
             $scope.state = 3;
             timeoutObj = $timeout(function(){
                 $scope.state = 0;
-                if(typeof call4arms_cancelObj === "undefined"){
+                if(
+                    typeof call4arms_cancelObj === 'undefined' ||
+                    2 === call4arms_cancelObj.$$state.status
+                ){
                     call4arms_cancelObj = $interval(function(){
                         call4arms_sound.play();
                     }, 120000);
