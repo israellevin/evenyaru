@@ -29,7 +29,7 @@
 #paper {background:url('../img/paper2.png') no-repeat top left transparent;}
 #rock {background:url('../img/rock2.png') no-repeat top left transparent;}
 
-.waiting4U {position:absolute; right: 12em;top: 2em; font-size: 17px !important;color: darkred;line-height: 0.5;font-weight: normal;}
+.waiting4U {position:absolute; right: 12em;top: 2em; font-size: 17px !important;color: darkred;line-height: 0.5;font-weight: normal;font-family:BN Zika}
 
 #fight {position:relative;}
 

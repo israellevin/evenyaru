@@ -23,7 +23,7 @@
                     <div class='us green'>ירוקים:  {{score[0]}} נקודות</div>
                     <div class=uncleSam>לחץ לבחור עבור הירוקים!
                         <div ng-if="state===-1"  class=waiting4U>הסגולים כבר בחרו</div>
-                        <div ng-if="state===2"  class=waiting4U>מחכים לצד השני</div>
+                        <div ng-if="state===2 && them===''"  class=waiting4U>מחכים לצד השני</div>
                     </div>
                     <div class='them-s purple'>סגולים: {{score[1]}} נקודות</div>
                 </div>
@@ -31,7 +31,7 @@
                     <div class='us purple'>סגולים:  {{score[1]}} נקודות</div>
                     <div  class=uncleSam>לחץ לבחור עבור הסגולים!
                         <div ng-if="state===-1" class=waiting4U>הירוקים כבר בחרו</div>
-                        <div ng-if="state===2"  class=waiting4U>מחכים לצד השני</div>
+                        <div ng-if="state===2 && them===''"  class=waiting4U>מחכים לצד השני</div>
                     </div>
                     <div class='them-s green'>ירוקים: {{score[0]}} נקודות</div>
                 </div>
