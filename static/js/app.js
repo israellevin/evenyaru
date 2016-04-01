@@ -205,8 +205,12 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
                     call4win_sound.play();
                 }, 15000);
             }
-            if ($scope.state !== 1 && $scope.state !== 2) $scope.state = -1;
+            if ($scope.state !== 1 && $scope.state !== 2){ 
+		    if($scope.state==3) {prevPage=-1; }
+		    else {$scope.state = -1;}
+	     }
         }
+	console.log("$scope.state-->",$scope.state);
         $scope.$applyAsync();
     });
 
@@ -272,7 +276,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     };
 
     $scope.gotomail = function(){
-        if($scope.state === 2) prevPage = $scope.state;
+        if($scope.state === -1) prevPage = $scope.state;
         $scope.state = 3;
         timeoutObj = $timeout(function(){
             $scope.state = prevPage;
@@ -288,6 +292,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     };
 
     $scope.gotomain = function(){
-        $scope.state = 0;
+	if(prevPage==-1) {$scope.state = -1;}
+        else {$scope.state = 0;}
     };
 });

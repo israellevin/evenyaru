@@ -63,8 +63,7 @@
                     <div ng-if="response" id=response class={{them}}>
                         <div  class='them {{response}}' ></div>
                     </div>
-                    <div class="mail-fight"></div>
-                    <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
+                   
                 </div>
                 <div id=postfight ng-if="state == 3">
                     <div id=quip>{{quip}}</div>
@@ -75,7 +74,7 @@
                         לא נעביר אותו לאף אחד. נשבעים!
                     </div>
                     <form ng-submit="log_email(email); email='';">
-                        <input id=imail ng-model=email ng-keypress="cancelTimeout()">
+                        <input id=imail ng-model=email ng-keyup="cancelTimeout()">
                         <input id=isend type=submit value="שלח">
                     </form>
                     <input type="button" id="back2game" value="בוא נחזור לשחק!" ng-click="gotomain()">
