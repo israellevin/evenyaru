@@ -21,14 +21,17 @@
             <div class='main'>
                 <div class=header ng-if="team == 0">
                     <div class='us green'>ירוקים:  {{score[0]}} נקודות</div>
-                    <div class=uncleSam>עזור לירוקים לנצח!
+                    <div class=uncleSam>לחץ לבחור עבור הירוקים!
                         <div ng-if="state===-1"  class=waiting4U>הסגולים כבר בחרו</div>
+                        <div ng-if="state===2 && them===''"  class=waiting4U>מחכים לצד השני</div>
                     </div>
                     <div class='them-s purple'>סגולים: {{score[1]}} נקודות</div>
                 </div>
                 <div class=header ng-if="team == 1">
                     <div class='us purple'>סגולים:  {{score[1]}} נקודות</div>
-                    <div  class=uncleSam>עזור לסגולים לנצח!<div ng-if="state===-1" class=waiting4U>הירוקים כבר בחרו</div>
+                    <div  class=uncleSam>לחץ לבחור עבור הסגולים!
+                        <div ng-if="state===-1" class=waiting4U>הירוקים כבר בחרו</div>
+                        <div ng-if="state===2 && them===''"  class=waiting4U>מחכים לצד השני</div>
                     </div>
                     <div class='them-s green'>ירוקים: {{score[0]}} נקודות</div>
                 </div>
@@ -60,8 +63,7 @@
                     <div ng-if="response" id=response class={{them}}>
                         <div  class='them {{response}}' ></div>
                     </div>
-                    <div class="mail-fight"></div>
-                    <div class="mail" ng-click="gotomail()">רוצה להשתתף במחקר המגניב שלנו?</div>
+                   
                 </div>
                 <div id=postfight ng-if="state == 3">
                     <div id=quip>{{quip}}</div>
@@ -72,10 +74,10 @@
                         לא נעביר אותו לאף אחד. נשבעים!
                     </div>
                     <form ng-submit="log_email(email); email='';">
-                        דואל: <input id=imail ng-model=email ng-keypress="cancelTimeout()">
+                        <input id=imail ng-model=email ng-keyup="cancelTimeout()">
                         <input id=isend type=submit value="שלח">
                     </form>
-                    <div id=back2game>בקרוב חוזרים למשחק...</div>
+                    <input type="button" id="back2game" value="בוא נחזור לשחק!" ng-click="gotomain()">
                 </div>
             </div>
         </ion-content>
