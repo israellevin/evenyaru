@@ -20,6 +20,8 @@ if 'DEBUG' in os.environ:
     app.logger.setLevel(logging.DEBUG)
 else:
     streamHandler = logging.StreamHandler()
+    streamHandler.setFormatter(logging.Formatter(
+        "%(asctime)s %(levelname)s: %(message)s"))
     app.logger.addHandler(streamHandler)
     app.logger.setLevel(logging.INFO)
 
