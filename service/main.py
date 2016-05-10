@@ -6,7 +6,6 @@ import uuid
 import json
 import logging
 import threading
-import email.utils
 
 import redis
 import flask
@@ -128,6 +127,10 @@ def index():
         flask.session['token'] = token
     return response
 
+@app.route('/status')
+def status():
+    'show room status'
+    return flask.render_template('status.html', rooms=rooms)
 
 @socketio.on('connect')
 def connect():
@@ -226,13 +229,12 @@ def play(message):
 @socketio.on('log_email')
 def log_email(address):
     'Send a message to log.'
-    if '@' in email.utils.parseaddr(address)[1]:
-        app.logger.info(
-            "Client %s in team %s in room %s gave address '%s'",
-            flask.session.get(flask.request.sid),
-            flask.session.get('team'),
-            flask.session.get('room'),
-            address)
+    app.logger.info(
+        "Client %s in team %s in room %s gave address '%s'",
+        flask.session.get(flask.request.sid),
+        flask.session.get('team'),
+        flask.session.get('room'),
+        address)
 
 
 if __name__ == '__main__':
