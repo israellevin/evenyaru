@@ -11,6 +11,12 @@ import redis
 import flask
 import flask_socketio as io
 
+def make_token():
+    'A timestamp is easier to debug'
+    import datetime
+    now = datetime.datetime.now()
+    return '-'.join((now.strftime('%Y%m%d-%H%M%S'), now.microsecond))
+
 app = flask.Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'Should be set in env'
 
@@ -119,12 +125,6 @@ threading.Thread(target=checkredis).start()
 def index():
     'Handle token registration and redirect to app.'
     response = app.send_static_file('index.html')
-    if 'token' not in flask.session:
-        token = flask.request.cookies.get('token')
-        if token is None:
-            token = str(uuid.uuid4())
-            response.set_cookie('token', token)
-        flask.session['token'] = token
     return response
 
 @app.route('/status')
@@ -132,13 +132,13 @@ def status():
     'show room status'
     return flask.render_template('status.html', rooms=rooms)
 
-@socketio.on('connect')
-def connect():
-    'Report back with token.'
-    token = flask.session.get('token', flask.request.sid)
+@socketio.on('connecting')
+def connecting(message):
+    'Use client-supplied token, or return something the client should store'
+    token = message.get('token', make_token())
+    falsk.session['token'] = token
     app.logger.info("Client {} connected".format(token))
     io.emit('connected', {'token': token})
-
 
 @socketio.on('join')
 def join(message):
@@ -150,7 +150,7 @@ def join(message):
         db.decr(numplayerskey)
         io.emit('fail', {'room': room, 'type': 'room is full'})
         return
-    token = flask.request.sid
+    token = flask.session['token']
     tokenteamkey = "team-{}".format(token)
     roomteamskey = "teams-{}".format(room)
     if numplayers > 1:
@@ -182,7 +182,7 @@ def join(message):
 @socketio.on('disconnect')
 def disconnect():
     'Cleanup.'
-    app.logger.info("Client {} disconnected".format(flask.request.sid))
+    app.logger.info("Client {} disconnected".format(flask.session['token']))
     if 'room' in flask.session.keys():
         room = flask.session['room']
         team = flask.session['team']
@@ -231,7 +231,7 @@ def log_email(address):
     'Send a message to log.'
     app.logger.info(
         "Client %s in team %s in room %s gave address '%s'",
-        flask.session.get(flask.request.sid),
+        flask.session.get('token'),
         flask.session.get('team'),
         flask.session.get('room'),
         address)
