@@ -1,3 +1,7 @@
+Temporary branch, changing the protocol so that the client stores the token explicitly because sockets don't get cookies (it's not like we're being mean to sockets. We'd gladly give them a cookie, but [they just don't get it](https://archive.is/DPhfY#selection-3151.593-3151.722)).
+
+---------------------------
+
 This is the Android apk version of the Evenyaru server, implemented in kivy as a service
 
 * One of the 2 phones should serve as a hotspot (internet connection not needed),
