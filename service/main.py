@@ -154,15 +154,17 @@ def join(message):
     tokenteamkey = "team-{}".format(token)
     roomteamskey = "teams-{}".format(room)
     if numplayers > 1:
-        team = 1 - int(db.lrange(roomteamskey, 0, 1)[0])
-        if team != int(db.get(tokenteamkey) or team) and not message.get('override'):
+        team = int(message.get('team',
+            1 - int(db.lrange(roomteamskey, 0, 1)[0])))
+        if team != int(db.get(tokenteamkey) or team):
             db.decr(numplayerskey)
             io.emit('fail', {'room': room, 'type': 'wrong team'})
             return
     else:
-        team = (db.get(tokenteamkey) or 0)
-    db.lpush(roomteamskey, team)
+        team = int(message.get('team',
+            (db.get(tokenteamkey) or 0)))
 
+    db.lpush(roomteamskey, team)
     db.set(tokenteamkey, team)
     flask.session['room'] = room
     flask.session['team'] = team
