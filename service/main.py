@@ -15,7 +15,7 @@ def make_token():
     'A timestamp is easier to debug'
     import datetime
     now = datetime.datetime.now()
-    return '-'.join((now.strftime('%Y%m%d-%H%M%S'), now.microsecond))
+    return '-'.join((now.strftime('%Y%m%d-%H%M%S'), str(now.microsecond)))
 
 app = flask.Flask(__name__, static_url_path='')
 app.config['SECRET_KEY'] = 'Should be set in env'
@@ -132,11 +132,11 @@ def status():
     'show room status'
     return flask.render_template('status.html', rooms=rooms)
 
-@socketio.on('connecting')
-def connecting(message):
+@socketio.on('hello')
+def hello(message):
     'Use client-supplied token, or return something the client should store'
     token = message.get('token', make_token())
-    falsk.session['token'] = token
+    flask.session['token'] = token
     app.logger.info("Client {} connected".format(token))
     io.emit('connected', {'token': token})
 

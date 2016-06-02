@@ -140,11 +140,12 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     var win_sound = new Audio(home + '/audio/win.ogg');
     var noo_sound = new Audio(home + '/audio/noo.ogg');
 
-    $cordovaStatusbar.hide();
+    try { $cordovaStatusbar.hide(); } catch(e) { console.log("Can't hide status bar"); }
 
-    socket.emit('connecting', {token: token});
+    socket.emit('hello', {token: token});
 
     socket.on('connected', function(message){
+        console.log('connected: '+JSON.stringify(message));
         $scope.token = message.token;
         $scope.room = $location.search().room || 'stam';
         $scope.join($scope.room);
@@ -158,15 +159,6 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
                 template: 'נסה שוב?'
             }).then(function(){
                 $scope.join($scope.room);
-            });
-        }else if(message.type === 'wrong team'){
-            $ionicPopup.confirm({
-                title: 'playing for the wrong team',
-                template: 'Would you like to override your default team?'
-            }).then(function(override){
-                if(override){
-                    $scope.join($scope.room, true);
-                }
             });
         }else{
             console.log('unknown error', message);
@@ -259,8 +251,8 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         },  4000);
     });
 
-    $scope.join = function(room, override){
-        socket.emit('join', {room: room, override: override});
+    $scope.join = function(room){
+        socket.emit('join', {room: room, team: token==='green'?0:1});
     };
 
     $scope.play = function(choice){
