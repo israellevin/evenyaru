@@ -126,8 +126,9 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     });
 })
 
-.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval){
+.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval, $cordovaStatusbar){
     var home = 'http://' + document.domain + ':' + location.port;
+    var token = $location.search().token || 'green';
     var socket = io.connect(home);
     var timeoutObj;
     var prevPage=0;
@@ -139,7 +140,9 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     var win_sound = new Audio(home + '/audio/win.ogg');
     var noo_sound = new Audio(home + '/audio/noo.ogg');
 
-    socket.emit('connect', {});
+    $cordovaStatusbar.hide();
+
+    socket.emit('connecting', {token: token});
 
     socket.on('connected', function(message){
         $scope.token = message.token;
