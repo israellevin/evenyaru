@@ -114,7 +114,7 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     $ionicConfigProvider.views.maxCache(0);
 })
 
-.run(function($ionicPlatform){
+.run(function($ionicPlatform, $cordovaStatusbar){
     $ionicPlatform.ready(function(){
         // Hide the accessory bar.
         if(window.cordova && window.cordova.plugins.Keyboard){
@@ -123,12 +123,15 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
         if(window.StatusBar){
             StatusBar.styleDefault();
         }
+        try{
+            $cordovaStatusbar.hide();
+        } catch(e){alert("Can't hide status bar");}
     });
 })
 
-.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval, $cordovaStatusbar){
-    var home = 'http://' + document.domain + ':' + location.port;
-    var token = $location.search().token || 'green';
+.controller('mainCtrl', function($scope, $location, $ionicPopup, $timeout, $interval){
+    var home = 'http://' + '192.168.43.1' + ':' + '5000';
+    var token = $location.search().token || 'purple';
     var socket = io.connect(home);
     var timeoutObj;
     var prevPage=0;
@@ -139,8 +142,6 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     var kiss_sound = new Audio(home + '/audio/kiss.ogg');
     var win_sound = new Audio(home + '/audio/win.ogg');
     var noo_sound = new Audio(home + '/audio/noo.ogg');
-
-    try { $cordovaStatusbar.hide(); } catch(e) { console.log("Can't hide status bar"); }
 
     socket.emit('hello', {token: token});
 
