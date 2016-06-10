@@ -114,18 +114,15 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
     $ionicConfigProvider.views.maxCache(0);
 })
 
-.run(function($ionicPlatform, $cordovaStatusbar){
+.run(function($ionicPlatform){
     $ionicPlatform.ready(function(){
         // Hide the accessory bar.
         if(window.cordova && window.cordova.plugins.Keyboard){
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
         }
-        if(window.StatusBar){
-            StatusBar.styleDefault();
-        }
-        try{
-            $cordovaStatusbar.hide();
-        } catch(e){alert("Can't hide status bar");}
+        // This trick requires the locktask plugin:
+        // ionic plugin add https://github.com/oddmouse/cordova-plugin-locktask
+        window.plugins.locktask.startLockTask();
     });
 })
 
@@ -291,4 +288,5 @@ angular.module('evenyaru', ['ionic', 'ngCordova']).config(function($ionicConfigP
 	if(prevPage==-1) {$scope.state = -1;}
         else {$scope.state = 0;}
     };
+
 });
